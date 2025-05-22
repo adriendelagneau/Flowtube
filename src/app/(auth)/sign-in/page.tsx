@@ -57,7 +57,7 @@ export default function SignIn() {
       return;
     }
 
-    const gRecaptcha = await executeRecaptcha("login");
+    const gRecaptcha = await executeRecaptcha("sign_in");
     if (!gRecaptcha) {
       setBackendError(
         "Captcha verification failed. Please refresh and try again."
