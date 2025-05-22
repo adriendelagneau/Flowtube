@@ -21,7 +21,7 @@ export const auth = betterAuth({
         nextCookies(),
         captcha({
             provider: "google-recaptcha", // or google-recaptcha, hcaptcha
-            secretKey: process.env.CAPTCHA_SECRET_KEY!,
+            secretKey: process.env.RECAPTCHA_SECRET_KEY!,
         }),
     ],
 

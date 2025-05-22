@@ -5,6 +5,7 @@ import { XIcon, EyeIcon, EyeOffIcon, Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -37,6 +38,8 @@ export default function SignUp() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [backendError, setBackendError] = useState<string | null>(null);
 
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -63,12 +66,30 @@ export default function SignUp() {
   };
 
   const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
+    if (!executeRecaptcha) {
+      console.log("not available to execute recaptcha");
+      return;
+    }
+
+    const gRecaptcha = await executeRecaptcha("sign-up");
+    if (!gRecaptcha) {
+      setBackendError(
+        "Captcha verification failed. Please refresh and try again."
+      );
+      return;
+    }
+
     await authClient.signUp.email(
       {
         email: values.email,
         password: values.password,
         name: values.name,
         image: image ? await convertImageToBase64(image) : "",
+        fetchOptions: {
+          headers: {
+            "x-captcha-response": gRecaptcha,
+          },
+        },
       },
       {
         onSuccess: () => {
@@ -78,7 +99,8 @@ export default function SignUp() {
           form.reset();
           resetImageState();
         },
-        onError: (ctx) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onError: (ctx: any) => {
           console.log("Error:", ctx);
           const errorMessage = ctx?.error?.message || "Something went wrong";
           setBackendError(errorMessage); // Set backend error
@@ -239,6 +261,7 @@ export default function SignUp() {
             <Button
               disabled={form.formState.isSubmitting}
               className="w-full cursor-pointer"
+              type="submit"
             >
               {form.formState.isSubmitting ? (
                 <Loader2Icon className="h-6 w-6 animate-spin" />
