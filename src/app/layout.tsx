@@ -4,6 +4,7 @@ import { Roboto, Exo_2 } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/themes-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -80,7 +81,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Toaster />
+          <GoogleReCaptchaProvider
+          reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY!}
+          >
+
           {children}
+          </GoogleReCaptchaProvider>
         </ThemeProvider>
       </body>
     </html>

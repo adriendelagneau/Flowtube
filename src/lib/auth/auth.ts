@@ -20,8 +20,8 @@ export const auth = betterAuth({
     plugins: [
         nextCookies(),
         captcha({
-            provider: "cloudflare-turnstile", // or google-recaptcha, hcaptcha
-            secretKey: process.env.TURNSTILE_SECRET_KEY!,
+            provider: "google-recaptcha", // or google-recaptcha, hcaptcha
+            secretKey: process.env.CAPTCHA_SECRET_KEY!,
         }),
     ],
 

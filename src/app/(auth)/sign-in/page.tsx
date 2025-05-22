@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -38,6 +39,8 @@ export default function SignIn() {
     "google" | "github" | null
   >(null);
 
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -49,17 +52,36 @@ export default function SignIn() {
   const handleCredentialsSignIn = async (
     values: z.infer<typeof signInSchema>
   ) => {
+    if (!executeRecaptcha) {
+      console.log("not available to execute recaptcha");
+      return;
+    }
+
+    const gRecaptcha = await executeRecaptcha("login");
+    if (!gRecaptcha) {
+      setBackendError(
+        "Captcha verification failed. Please refresh and try again."
+      );
+      return;
+    }
+
     await authClient.signIn.email(
       {
         email: values.email,
         password: values.password,
+        fetchOptions: {
+          headers: {
+            "x-captcha-response": gRecaptcha,
+          },
+        },
       },
       {
         onSuccess: async () => {
           router.push("/");
           router.refresh();
         },
-        onError: (ctx) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onError: (ctx: any) => {
           console.log("Error:", ctx);
           const errorMessage = ctx?.error?.message || "Something went wrong";
           setBackendError(errorMessage);
