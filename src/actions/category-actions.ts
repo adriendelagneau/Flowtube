@@ -5,7 +5,7 @@ import { PrismaClient } from "@/lib/generated";
 const prisma = new PrismaClient();
 
 
-export const GetCategory = async () => {
+export const getCategories = async () => {
   try {
     const categories = await prisma.category.findMany(); 
     return categories; 

@@ -1,9 +1,9 @@
-import { GetCategory } from "@/actions/category-actions";
+import { getCategories } from "@/actions/category-actions";
 
 import { FilterCarousel } from "./components/filter-carousel";
 
 const HomePage = async () => {
-  const categories = await GetCategory();
+  const categories = await getCategories();
 
   return (
     <div className="no-scrollbar overflow-y-auto">
