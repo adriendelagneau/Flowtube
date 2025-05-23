@@ -175,6 +175,29 @@ exports.Prisma.CategoryScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.VideoScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  muxStatus: 'muxStatus',
+  muxAssetId: 'muxAssetId',
+  muxUploadId: 'muxUploadId',
+  muxPlaybackId: 'muxPlaybackId',
+  muxTrackId: 'muxTrackId',
+  muxTrackStatus: 'muxTrackStatus',
+  thumbnailUrl: 'thumbnailUrl',
+  thumbnailKey: 'thumbnailKey',
+  previewUrl: 'previewUrl',
+  previewKey: 'previewKey',
+  duration: 'duration',
+  visibility: 'visibility',
+  userId: 'userId',
+  categoryId: 'categoryId',
+  videoViews: 'videoViews',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -189,14 +212,18 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.VideoVisibility = exports.$Enums.VideoVisibility = {
+  private: 'private',
+  public: 'public'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
-  Category: 'Category'
+  Category: 'Category',
+  Video: 'Video'
 };
 
 /**

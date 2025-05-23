@@ -13,5 +13,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/studio/:path*"], // Matches /studio and all nested routes
+    matcher: ["/studio/:path*"], 
 };
