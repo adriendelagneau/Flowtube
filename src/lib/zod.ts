@@ -22,7 +22,7 @@ export const signUpSchema = object({
 
   image: string()
     .regex(base64Regex, "Invalid Base64 image format")
-    .or(string().url("Invalid image URL"))
+    // .or(string().url("Invalid image URL"))
     .optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",

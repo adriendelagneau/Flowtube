@@ -82,8 +82,19 @@ export default function SignIn() {
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onError: (ctx: any) => {
-          console.log("Error:", ctx);
           const errorMessage = ctx?.error?.message || "Something went wrong";
+
+          if (
+            errorMessage.includes("captcha") ||
+            errorMessage.toLowerCase().includes("suspicious") ||
+            ctx?.status === 403
+          ) {
+            setBackendError(
+              "Suspicious activity detected. Please refresh the page or try again later."
+            );
+            return;
+          }
+
           setBackendError(errorMessage);
         },
       }
