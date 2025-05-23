@@ -34,7 +34,7 @@ export const UserButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center">
-        <Avatar className="mx-2 h-8 w-8">
+        <Avatar className="mx-2 h-7 w-7 cursor-pointer">
           {imageSrc ? (
             <AvatarImage src={imageSrc} alt="User Avatar" />
           ) : (
