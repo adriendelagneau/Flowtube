@@ -5,7 +5,7 @@ import { XIcon, EyeIcon, EyeOffIcon, Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-// import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -38,7 +38,7 @@ export default function SignUp() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [backendError, setBackendError] = useState<string | null>(null);
 
-  // const { executeRecaptcha } = useGoogleReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -66,18 +66,18 @@ export default function SignUp() {
   };
 
   const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
-    // if (!executeRecaptcha) {
-    //   console.log("not available to execute recaptcha");
-    //   return;
-    // }
+    if (!executeRecaptcha) {
+      console.log("not available to execute recaptcha");
+      return;
+    }
 
-    // const gRecaptcha = await executeRecaptcha("sign_up");
-    // if (!gRecaptcha) {
-    //   setBackendError(
-    //     "Captcha verification failed. Please refresh and try again."
-    //   );
-    //   return;
-    // }
+    const gRecaptcha = await executeRecaptcha("sign_up");
+    if (!gRecaptcha) {
+      setBackendError(
+        "Captcha verification failed. Please refresh and try again."
+      );
+      return;
+    }
 
     await authClient.signUp.email(
       {
@@ -85,11 +85,11 @@ export default function SignUp() {
         password: values.password,
         name: values.name,
         image: image ? await convertImageToBase64(image) : "",
-        // fetchOptions: {
-        //   headers: {
-        //     "x-captcha-response": gRecaptcha,
-        //   },
-        // },
+        fetchOptions: {
+          headers: {
+            "x-captcha-response": gRecaptcha,
+          },
+        },
       },
       {
         onSuccess: () => {
