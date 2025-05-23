@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Roboto, Exo_2 } from "next/font/google";
 import "./globals.css";
 
-import { RecaptchaProvider } from "@/components/google-captcha-provider";
+// import { RecaptchaProvider } from "@/components/google-captcha-provider";
 import { ThemeProvider } from "@/components/themes-provider";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -81,7 +81,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Toaster />
-          <RecaptchaProvider>{children}</RecaptchaProvider>
+          {/* <RecaptchaProvider> */}
+            {children}
+
+          {/* </RecaptchaProvider> */}
         </ThemeProvider>
       </body>
     </html>
