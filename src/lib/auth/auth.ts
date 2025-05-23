@@ -5,7 +5,7 @@ import { nextCookies } from "better-auth/next-js";
 
 import { sendEmail } from "@/actions/email-actions";
 
-import { PrismaClient } from "../generated/client";
+import { PrismaClient } from "../generated";
 
 const prisma = new PrismaClient();
 
