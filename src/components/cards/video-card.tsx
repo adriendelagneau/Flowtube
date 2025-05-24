@@ -40,7 +40,7 @@ const VideoCard = ({ video }: VideoCardProps) => {
         <div className="flex min-w-0 flex-1 gap-3">
           <Link href={`/user/${video.user.id}`}>
             <Image
-              src={video.user.image || "placeholder.svg"}
+              src={video.user.image || "/user.png"}
               alt={video.user.name || "John Doe"}
               width={28}
               height={28}
