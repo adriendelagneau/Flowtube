@@ -11,7 +11,6 @@ const prisma = new PrismaClient();
 
 const f = createUploadthing();
 
-console.log("otfiler");
 export const ourFileRouter = {
   thumbnailUploader: f({
     image: {

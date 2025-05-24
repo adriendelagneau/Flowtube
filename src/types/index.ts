@@ -16,3 +16,7 @@ export type UploadFileResponse<TServerOutput> = {
   serverData: TServerOutput; // Custom data returned from the `onUploadComplete` callback
 };
 
+
+  export interface VideoWithUserAndCount extends Video {
+    user: User;
+  }

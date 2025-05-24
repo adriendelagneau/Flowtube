@@ -13,13 +13,21 @@ model User {
   email String  @unique
   name  String?
 
-  emailVerified Boolean
-  image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
-  videos        Video[]
+  emailVerified   Boolean
+  image           String?
+  createdAt       DateTime
+  updatedAt       DateTime
+  sessions        Session[]
+  accounts        Account[]
+  videos          Video[]
+  likes           Like[]
+  dislikes        Dislike[]
+  comments        Comment[]
+  commentLikes    CommentLike[]
+  commentDislikes CommentDislike[]
+
+  viewerSubscriptions Subscription[] @relation("ViewerSubscriptions")
+  creatorSubscribers  Subscription[] @relation("CreatorSubscribers")
 
   @@map("user")
 }
@@ -109,8 +117,102 @@ model Video {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  likes    Like[]
+  dislikes Dislike[]
+  comments Comment[]
+
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
   @@map("video")
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  videoId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video Video @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, videoId])
+  @@map("like")
+}
+
+model Dislike {
+  id        String   @id @default(uuid())
+  userId    String
+  videoId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video Video @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, videoId])
+  @@map("dislike")
+}
+
+model Subscription {
+  viewerId  String
+  creatorId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  viewer  User @relation("ViewerSubscriptions", fields: [viewerId], references: [id], onDelete: Cascade)
+  creator User @relation("CreatorSubscribers", fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@id([viewerId, creatorId])
+  @@map("subscription")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  parentId  String? // Make it optional to allow top-level comments
+  userId    String
+  videoId   String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video Video @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  commentLikes    CommentLike[]
+  commentDislikes CommentDislike[]
+
+  parent  Comment?  @relation("CommentToReplies", fields: [parentId], references: [id])
+  replies Comment[] @relation("CommentToReplies")
+
+  @@map("comment")
+}
+
+model CommentLike {
+  id        String   @id @default(uuid())
+  userId    String
+  commentId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId])
+  @@map("comment_like")
+}
+
+model CommentDislike {
+  id        String   @id @default(uuid())
+  userId    String
+  commentId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId])
+  @@map("comment_dislike")
 }
