@@ -1,7 +1,10 @@
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import type { Metadata } from "next";
 import { Roboto, Exo_2 } from "next/font/google";
 import "./globals.css";
+import { extractRouterConfig } from "uploadthing/server";
 
+import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { RecaptchaProvider } from "@/components/google-captcha-provider";
 import { ThemeProvider } from "@/components/themes-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -82,8 +85,10 @@ export default function RootLayout({
         >
           <Toaster />
           <RecaptchaProvider>
+            <NextSSRPlugin
+              routerConfig={extractRouterConfig(ourFileRouter)}
+            />
             {children}
-
           </RecaptchaProvider>
         </ThemeProvider>
       </body>
