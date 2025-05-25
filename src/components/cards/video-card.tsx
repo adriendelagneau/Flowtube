@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link"; // <<< Import Link
 import React from "react";
 
-import { VideoThumbnail } from "@/app/(studio)/studio/video-thumbnail";
+import { VideoThumbnail } from "@/app/(studio)/studio/components/video-thumbnail"; 
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

@@ -49,24 +49,47 @@ export async function createVideo() {
     }
 }
 
-export async function getUserVideos() {
+export async function getUserVideos({
+    page = 1,
+    pageSize = 9,
+}: {
+    page?: number;
+    pageSize?: number;
+}) {
     const user = await getUser();
     if (!user) {
         throw new Error("Unauthorized");
     }
 
-    try {
-        const videos = await prisma.video.findMany({
-            where: { userId: user.id }, // Fetch only the logged-in user's videos
-            orderBy: { createdAt: "desc" }, // Sort by latest videos first
-        });
+    const skip = (page - 1) * pageSize;
 
-        return videos;
+    try {
+        const [videos, total] = await Promise.all([
+            prisma.video.findMany({
+                where: { userId: user.id },
+                orderBy: { createdAt: "desc" },
+                skip,
+                take: pageSize,
+                // Optionally include related data:
+                // include: { category: true, user: true },
+            }),
+            prisma.video.count({
+                where: { userId: user.id },
+            }),
+        ]);
+
+        const hasMore = skip + videos.length < total;
+
+        return {
+            videos,
+            hasMore,
+        };
     } catch (error) {
         console.error("Error fetching videos:", error);
         throw new Error("Failed to fetch videos");
     }
 }
+
 
 export async function updateVideo(
     videoId: string,

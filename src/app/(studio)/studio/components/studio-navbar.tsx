@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import { UserButton } from "@/app/(home)/components/user-button"; 
+import { UserButton } from "@/app/(home)/components/user-button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 import StudioUploadModal from "./studio-upload-modal";

@@ -13,14 +13,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Video } from "@/lib/generated"; 
+import { Video } from "@/lib/generated";
 import { snakeCaseToTitle } from "@/lib/utils";
 
-import { VideoThumbnail } from "./video-thumbnail";
+import { VideoThumbnail } from "./components/video-thumbnail";
 
-export const StudioSection = ({ videos }: { videos: Video[] }) => {
+interface StudioSectionProps {
+  videos: Video[];
+  hasMore: boolean;
+};
+
+export const StudioSection = ({ videos, hasMore }: StudioSectionProps) => {
   const router = useRouter();
 
+
+  console.log(videos, hasMore);
   return (
     <div>
       <div className="border-y">

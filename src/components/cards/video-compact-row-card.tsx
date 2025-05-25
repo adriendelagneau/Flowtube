@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import { VideoThumbnail } from "@/app/(studio)/studio/video-thumbnail";
+import { VideoThumbnail } from "@/app/(studio)/studio/components/video-thumbnail";
 import { cn } from "@/lib/utils";
 import { VideoWithUserAndCount } from "@/types";
 

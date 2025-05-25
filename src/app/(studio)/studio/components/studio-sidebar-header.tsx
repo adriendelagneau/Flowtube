@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 
 import { SidebarHeader, useSidebar } from "@/components/ui/sidebar";
-import { User } from "@/lib/generated"; 
+import { User } from "@/lib/generated";
 import { cn } from "@/lib/utils";
 
 import { UserAvatar } from "./user-avatar";
@@ -15,7 +15,6 @@ interface StudioSidebarHeaderProps {
 
 export const StudioSidebarHeader = ({ user }: StudioSidebarHeaderProps) => {
   const { state } = useSidebar();
-
 
   return (
     <SidebarHeader className="flex items-center justify-center pb-4">
@@ -42,5 +41,3 @@ export const StudioSidebarHeader = ({ user }: StudioSidebarHeaderProps) => {
     </SidebarHeader>
   );
 };
-
-
