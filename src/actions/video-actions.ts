@@ -4,7 +4,7 @@
 import Mux from "@mux/mux-node";
 
 import { getUser } from "@/lib/auth/auth-session";
-import { Prisma, PrismaClient, Video } from "@/lib/generated";
+import { Prisma, PrismaClient } from "@/lib/generated";
 import { VideoWithUser } from "@/types";
 
 
@@ -49,7 +49,7 @@ export async function createVideo() {
     }
 }
 
-export async function getUserVideos(): Promise<Video[]> {
+export async function getUserVideos() {
     const user = await getUser();
     if (!user) {
         throw new Error("Unauthorized");
