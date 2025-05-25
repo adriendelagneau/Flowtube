@@ -6,9 +6,11 @@ import { useInView } from "react-intersection-observer";
 
 import { fetchVideos } from "@/actions/video-actions";
 import VideoCard from "@/components/cards/video-card";
+import { Video } from "@/lib/generated";
 import { cn } from "@/lib/utils";
 import { VideoWithUserAndCount } from "@/types";
 
+import VideoStudioRowCard from "./cards/studio-card";
 import VideoCompactRawCard from "./cards/video-compact-row-card";
 
 const limit = 9;
@@ -21,7 +23,7 @@ export default function InfiniteScrollMovies({
   subscribed,
   variant,
 }: {
-  initialVideos: VideoWithUserAndCount[];
+  initialVideos: Video[] | VideoWithUserAndCount[];
   hasMore: boolean;
   liked?: boolean; // User ID who liked the videos
   history?: boolean; // New prop for history
@@ -31,9 +33,10 @@ export default function InfiniteScrollMovies({
   const searchParams = useSearchParams();
   const { ref, inView } = useInView();
 
-  const [videos, setVideos] = useState<VideoWithUserAndCount[]>(
+  const [videos, setVideos] = useState<(VideoWithUserAndCount | Video)[] | []>(
     initialVideos ?? []
   );
+
   const [page, setPage] = useState(2);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [loading, setLoading] = useState(false);
@@ -126,9 +129,11 @@ export default function InfiniteScrollMovies({
       {videos.map((video) => (
         <div key={video.id}>
           {variant === "search" ? (
-            <VideoCompactRawCard video={video} />
+            <VideoCompactRawCard video={video as VideoWithUserAndCount} />
+          ) : variant === "studio" ? (
+            <VideoStudioRowCard video={video as Video} />
           ) : (
-            <VideoCard video={video} />
+            <VideoCard video={video as VideoWithUserAndCount} />
           )}
         </div>
       ))}

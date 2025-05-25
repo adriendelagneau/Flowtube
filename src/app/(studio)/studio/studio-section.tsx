@@ -1,33 +1,24 @@
-"use client";
-
-import { format } from "date-fns";
-import { Globe2Icon, LockIcon } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-
+import InfiniteScrollMovies from "@/components/infinitScroolVideos";
 import {
   Table,
   TableBody,
-  TableCell,
+
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Video } from "@/lib/generated";
-import { snakeCaseToTitle } from "@/lib/utils";
 
-import { VideoThumbnail } from "./components/video-thumbnail";
 
 interface StudioSectionProps {
   videos: Video[];
   hasMore: boolean;
-};
+}
 
 export const StudioSection = ({ videos, hasMore }: StudioSectionProps) => {
-  const router = useRouter();
 
 
-  console.log(videos, hasMore);
+
   return (
     <div>
       <div className="border-y">
@@ -44,7 +35,15 @@ export const StudioSection = ({ videos, hasMore }: StudioSectionProps) => {
             </TableRow>
           </TableHeader>
           <TableBody className="w-full">
-            {videos.map((video) => (
+            <InfiniteScrollMovies initialVideos={videos} hasMore={hasMore} />
+
+            <InfiniteScrollMovies
+              initialVideos={videos}
+              hasMore={hasMore}
+              variant="studio"
+            />
+
+            {/* {videos.map((video) => (
               <TableRow
                 key={video.id}
                 className="cursor-pointer"
@@ -93,7 +92,7 @@ export const StudioSection = ({ videos, hasMore }: StudioSectionProps) => {
                 <TableCell className="text-right text-sm">{7}</TableCell>
                 <TableCell className="pr-6 text-right text-sm">{10}</TableCell>
               </TableRow>
-            ))}
+            ))} */}
           </TableBody>
         </Table>
       </div>
