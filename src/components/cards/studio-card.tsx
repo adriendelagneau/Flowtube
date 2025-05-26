@@ -11,16 +11,18 @@ import { VideoThumbnail } from "@/app/(studio)/studio/components/video-thumbnail
 import { Video } from "@/lib/generated";
 import { snakeCaseToTitle } from "@/lib/utils";
 
+import { TableCell, TableRow } from "../ui/table";
+
 export default function VideoStudioRowCard({ video }: { video: Video }) {
   const router = useRouter();
 
   return (
-    <tr
+    <TableRow
       key={video.id}
-      className="hover:bg-muted cursor-pointer"
+      className="cursor-pointer"
       onClick={() => router.push(`/studio/video/${video.id}`)}
     >
-      <td className="w-[510px] pl-6">
+      <TableCell className="w-[510px] pl-6">
         <Link
           href={`/studio/video/${video.id}`}
           className="flex items-center gap-4"
@@ -40,8 +42,8 @@ export default function VideoStudioRowCard({ video }: { video: Video }) {
             </div>
           </div>
         </Link>
-      </td>
-      <td>
+      </TableCell>
+      <TableCell>
         <div className="flex items-center">
           {video.visibility === "private" ? (
             <LockIcon className="mr-2 size-4" />
@@ -50,18 +52,18 @@ export default function VideoStudioRowCard({ video }: { video: Video }) {
           )}
           {snakeCaseToTitle(video.visibility)}
         </div>
-      </td>
-      <td>
+      </TableCell>
+      <TableCell>
         <div className="flex items-center">
           {snakeCaseToTitle(video.muxStatus || "error")}
         </div>
-      </td>
-      <td className="truncate text-sm">
+      </TableCell>
+      <TableCell className="truncate text-sm">
         {format(new Date(video.createdAt), "d MMM yyyy")}
-      </td>
-      <td className="text-right text-sm">{24}</td>
-      <td className="text-right text-sm">{7}</td>
-      <td className="pr-6 text-right text-sm">{10}</td>
-    </tr>
+      </TableCell>
+      <TableCell className="text-right text-sm">{24}</TableCell>
+      <TableCell className="text-right text-sm">{7}</TableCell>
+      <TableCell className="pr-6 text-right text-sm">{10}</TableCell>
+    </TableRow>
   );
 }

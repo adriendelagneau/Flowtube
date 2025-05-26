@@ -117,34 +117,44 @@ export default function InfiniteScrollMovies({
     subscribed,
   ]); // Add liked to dependencies
 
-  return (
-    <div
-      className={cn(
-        "no-scrollbar",
-        variant === "search"
-          ? "mx-auto flex max-w-6xl flex-col gap-6"
-          : "grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3"
-      )}
-    >
-      {videos.map((video) => (
-        <div key={video.id}>
-          {variant === "search" ? (
-            <VideoCompactRawCard video={video as VideoWithUserAndCount} />
-          ) : variant === "studio" ? (
-            <VideoStudioRowCard video={video as Video} />
-          ) : (
-            <VideoCard video={video as VideoWithUserAndCount} />
-          )}
-        </div>
-      ))}
+   const containerClass =
+    variant === "search"
+      ? "no-scrollbar mx-auto flex max-w-6xl flex-col gap-6"
+      : variant === "studio"
+      ? ""
+      : "no-scrollbar grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3";
 
-      {hasMore && (
-        <div className="col-span-full" ref={ref}>
-          {loading && (
-            <p className="mt-4 text-center">Loading more videos...</p>
-          )}
-        </div>
-      )}
-    </div>
-  );
+return variant === "studio" ? (
+  <>
+    {videos.map((video) => (
+      <VideoStudioRowCard key={video.id} video={video as Video} />
+    ))}
+    {hasMore && (
+      <tr ref={ref}>
+        <td colSpan={7} className="text-center py-4">
+          {loading && "Loading more videos..."}
+        </td>
+      </tr>
+    )}
+  </>
+) : (
+  <div className={cn(containerClass, "w-full")}>
+    {videos.map((video) => (
+      <div key={video.id}>
+        {variant === "search" ? (
+          <VideoCompactRawCard video={video as VideoWithUserAndCount} />
+        ) : (
+          <VideoCard video={video as VideoWithUserAndCount} />
+        )}
+      </div>
+    ))}
+
+    {hasMore && (
+      <div className="col-span-full" ref={ref}>
+        {loading && <p className="mt-4 text-center">Loading more videos...</p>}
+      </div>
+    )}
+  </div>
+);
+
 }
