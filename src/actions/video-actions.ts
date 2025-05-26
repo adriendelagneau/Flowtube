@@ -180,126 +180,7 @@ export async function getVideoById(videoId: string): Promise<VideoWithUser | nul
     }
 }
 
-export async function fetchVideos({
-    query,
-    page = 1,
-    pageSize = 9,
-    categorySlug,
-    orderBy = "newest",
-    liked = false,
-    history = false,
-    subscribed = false,
-    // playlistId,
-}: {
-    query?: string;
-    page?: number;
-    pageSize?: number;
-    categorySlug?: string;
-    orderBy?: "newest" | "oldest" | "popular";
-    liked?: boolean;
-    history?: boolean;
-    subscribed?: boolean;
-    // playlistId?: string;
-}) {
-    const skip = (page - 1) * pageSize;
 
-    const whereClause: Prisma.VideoWhereInput = {
-        visibility: "public",
-    };
-
-    if (query) {
-        whereClause.title = {
-            contains: query,
-            mode: Prisma.QueryMode.insensitive,
-        };
-    }
-
-    if (categorySlug) {
-        whereClause.category = {
-            slug: categorySlug,
-        };
-    }
-
-    // 🎯 Handle playlist filter via join table
-    // if (playlistId) {
-    //     const playlistVideos = await prisma.playlistVideo.findMany({
-    //         where: { playlistId },
-    //         select: { videoId: true },
-    //     });
-
-    //     const videoIds = playlistVideos.map(pv => pv.videoId);
-    //     if (videoIds.length === 0) {
-    //         return { videos: [], hasMore: false };
-    //     }
-
-    //     whereClause.id = { in: videoIds };
-    // }
-
-    if (liked || history || subscribed) {
-        const currentUser = await getUser();
-        if (!currentUser) {
-            throw new Error("Unauthorized");
-        }
-
-        if (liked) {
-            whereClause.likes = {
-                some: {
-                    userId: currentUser.id,
-                },
-            };
-        }
-
-        // if (history) {
-        //     whereClause.watchHistory = {
-        //         some: {
-        //             userId: currentUser.id,
-        //         },
-        //     };
-        // }
-
-        if (subscribed) {
-            const subscriptions = await prisma.subscription.findMany({
-                where: { viewerId: currentUser.id },
-                select: { creatorId: true },
-            });
-
-            const creatorIds = subscriptions.map((sub) => sub.creatorId);
-            if (creatorIds.length === 0) {
-                return { videos: [], hasMore: false };
-            }
-
-            whereClause.userId = { in: creatorIds };
-        }
-    }
-
-    let orderClause: Prisma.VideoOrderByWithRelationInput = { createdAt: "desc" };
-    if (orderBy === "oldest") {
-        orderClause = { createdAt: "asc" };
-    } else if (orderBy === "popular") {
-        orderClause = { videoViews: "desc" };
-    }
-
-    const [videos, total] = await Promise.all([
-        prisma.video.findMany({
-            where: whereClause,
-            orderBy: orderClause,
-            skip,
-            take: pageSize,
-            include: {
-                user: true,
-                category: true,
-            },
-        }),
-        prisma.video.count({ where: whereClause }),
-    ]);
-
-    const hasMore = skip + videos.length < total;
-
-    return {
-        videos,
-        hasMore,
-    };
-}
 
 
 export async function restoreThumbnail(formData: FormData): Promise<Video> {
@@ -423,3 +304,124 @@ export async function revlidateVideo(videoId: string) {
     return updatedVideo;
 }
 
+
+export async function fetchVideos({
+    query,
+    page = 1,
+    pageSize = 9,
+    categorySlug,
+    orderBy = "newest",
+    liked = false,
+    history = false,
+    subscribed = false,
+    // playlistId,
+}: {
+    query?: string;
+    page?: number;
+    pageSize?: number;
+    categorySlug?: string;
+    orderBy?: "newest" | "oldest" | "popular";
+    liked?: boolean;
+    history?: boolean;
+    subscribed?: boolean;
+    // playlistId?: string;
+}) {
+    const skip = (page - 1) * pageSize;
+
+    const whereClause: Prisma.VideoWhereInput = {
+        visibility: "public",
+    };
+
+    if (query) {
+        whereClause.title = {
+            contains: query,
+            mode: Prisma.QueryMode.insensitive,
+        };
+    }
+
+    if (categorySlug) {
+        whereClause.category = {
+            slug: categorySlug,
+        };
+    }
+
+    // 🎯 Handle playlist filter via join table
+    // if (playlistId) {
+    //     const playlistVideos = await prisma.playlistVideo.findMany({
+    //         where: { playlistId },
+    //         select: { videoId: true },
+    //     });
+
+    //     const videoIds = playlistVideos.map(pv => pv.videoId);
+    //     if (videoIds.length === 0) {
+    //         return { videos: [], hasMore: false };
+    //     }
+
+    //     whereClause.id = { in: videoIds };
+    // }
+
+    if (liked || history || subscribed) {
+        const currentUser = await getUser();
+        if (!currentUser) {
+            throw new Error("Unauthorized");
+        }
+
+        if (liked) {
+            whereClause.likes = {
+                some: {
+                    userId: currentUser.id,
+                },
+            };
+        }
+
+        // if (history) {
+        //     whereClause.watchHistory = {
+        //         some: {
+        //             userId: currentUser.id,
+        //         },
+        //     };
+        // }
+
+        if (subscribed) {
+            const subscriptions = await prisma.subscription.findMany({
+                where: { viewerId: currentUser.id },
+                select: { creatorId: true },
+            });
+
+            const creatorIds = subscriptions.map((sub) => sub.creatorId);
+            if (creatorIds.length === 0) {
+                return { videos: [], hasMore: false };
+            }
+
+            whereClause.userId = { in: creatorIds };
+        }
+    }
+
+    let orderClause: Prisma.VideoOrderByWithRelationInput = { createdAt: "desc" };
+    if (orderBy === "oldest") {
+        orderClause = { createdAt: "asc" };
+    } else if (orderBy === "popular") {
+        orderClause = { videoViews: "desc" };
+    }
+
+    const [videos, total] = await Promise.all([
+        prisma.video.findMany({
+            where: whereClause,
+            orderBy: orderClause,
+            skip,
+            take: pageSize,
+            include: {
+                user: true,
+                category: true,
+            },
+        }),
+        prisma.video.count({ where: whereClause }),
+    ]);
+
+    const hasMore = skip + videos.length < total;
+
+    return {
+        videos,
+        hasMore,
+    };
+}

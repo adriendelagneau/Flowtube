@@ -12,7 +12,7 @@ interface ThumbnailUploadModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-// toto
+
 const ThumbnailUploadModal = ({
   videoId,
   open,
