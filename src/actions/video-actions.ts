@@ -2,9 +2,12 @@
 
 
 import Mux from "@mux/mux-node";
+import { revalidatePath } from "next/cache";
+import { UTApi } from "uploadthing/server";
 
 import { getUser } from "@/lib/auth/auth-session";
-import { Prisma, PrismaClient } from "@/lib/generated";
+import { Prisma, PrismaClient, Video } from "@/lib/generated";
+import { inputSchema } from "@/lib/zod";
 import { VideoWithUser } from "@/types";
 
 
@@ -298,4 +301,125 @@ export async function fetchVideos({
     };
 }
 
+
+export async function restoreThumbnail(formData: FormData): Promise<Video> {
+    const parsed = inputSchema.safeParse({
+        id: formData.get("id"),
+    });
+
+    if (!parsed.success) {
+        throw new Error("Invalid input");
+    }
+
+    const { id } = parsed.data;
+    const user = await getUser();
+
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+
+    const existingVideo = await prisma.video.findFirst({
+        where: {
+            id,
+            userId: user.id,
+        },
+    });
+
+    if (!existingVideo) {
+        throw new Error("Video not found");
+    }
+
+    // Delete existing thumbnail if it exists
+    if (existingVideo.thumbnailKey) {
+        const utapi = new UTApi();
+        await utapi.deleteFiles(existingVideo.thumbnailKey);
+
+        await prisma.video.update({
+            where: {
+                id: existingVideo.id,
+            },
+            data: {
+                thumbnailKey: null,
+                thumbnailUrl: null,
+            },
+        });
+    }
+
+    if (!existingVideo.muxPlaybackId) {
+        throw new Error("Missing Mux playback ID");
+    }
+
+    const tempThumbnailUrl = `https://image.mux.com/${existingVideo.muxPlaybackId}/thumbnail.jpg`;
+
+    const utapi = new UTApi();
+    const uploadedThumbnail = await utapi.uploadFilesFromUrl(tempThumbnailUrl);
+
+    if (!uploadedThumbnail.data) {
+        throw new Error("Thumbnail upload failed");
+    }
+
+    const { key: thumbnailKey, url: thumbnailUrl } = uploadedThumbnail.data;
+
+    const updatedVideo = await prisma.video.update({
+        where: {
+            id: existingVideo.id,
+        },
+        data: {
+            thumbnailKey,
+            thumbnailUrl,
+        },
+    });
+    revalidatePath(`/video/${existingVideo.id}`);
+
+    return updatedVideo;
+}
+
+export async function revlidateVideo(videoId: string) {
+
+    if (!videoId) throw new Error("videoId is required");
+    // Fetch user details
+
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+
+    const existingVideo = await prisma.video.findFirst({
+        where: {
+            id: videoId,
+            userId: user.id,
+        },
+    });
+    if (!existingVideo || !existingVideo.muxUploadId) {
+        throw new Error("Video not found");
+    }
+
+    const directUpload = await mux.video.uploads.retrieve(existingVideo.muxUploadId);
+    if (!directUpload || !directUpload.asset_id) {
+        throw new Error("Bad request");
+    }
+
+    const asset = await mux.video.assets.retrieve(directUpload.asset_id);
+    if (!asset) {
+        throw new Error("Bad request");
+    }
+
+
+    const playbackId = asset.playback_ids?.[0].id;
+    const duration = asset.duration ? Math.round(asset.duration * 1000) : 0;
+
+
+    // TODO: find a way to rvalidate track is & track status
+    const updatedVideo = await prisma.video.update({
+        where: { id: videoId, userId: user.id },
+        data: {
+            muxStatus: asset.status,
+            muxPlaybackId: playbackId,
+            muxAssetId: asset.id,
+            duration: duration
+        }
+    });
+
+    return updatedVideo;
+}
 

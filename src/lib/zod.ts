@@ -66,3 +66,5 @@ export const videoUpdateSchema = object({
   categoryId: string().uuid("Invalid category ID").optional(),
   // Add slug
 });
+
+export const inputSchema = z.object({ id: z.string().uuid() });
