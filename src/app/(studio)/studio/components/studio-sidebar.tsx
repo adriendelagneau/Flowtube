@@ -33,7 +33,7 @@ export const StudioSidebar = ({ user }: StudioSidebarProps) => {
         <SidebarGroup>
           <SidebarMenu>
             {/** Menu & Logo */}
-            <div className="flex flex-shrink-0 items-center xl:hidden">
+            <div className="flex flex-shrink-0 items-center md:hidden">
               <SidebarTrigger className="cursor-pointer" />
               <Link href={"/"}>
                 <div className="flex items-center gap-1 p-4">

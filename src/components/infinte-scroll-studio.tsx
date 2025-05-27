@@ -1,5 +1,6 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
@@ -79,7 +80,7 @@ const InfiniteScrollStudio = ({
       {hasMore && (
         <tr ref={ref}>
           <td colSpan={7} className="py-4 text-center">
-            {loading && "Loading more videos..."}
+            {loading && <Loader2 className="mx-auto h-8 w-8 animate-spin text-sky-600" />}
           </td>
         </tr>
       )}

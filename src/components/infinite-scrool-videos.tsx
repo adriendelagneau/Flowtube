@@ -12,6 +12,7 @@ import { VideoWithUserAndCount } from "@/types";
 
 import VideoStudioRowCard from "./cards/studio-card";
 import VideoCompactRawCard from "./cards/video-compact-row-card";
+import SkeletonMainVideos from "./skeleton-main-videos";
 
 const limit = 9;
 
@@ -66,6 +67,8 @@ export default function InfiniteScrollMovies({
         setVideos(newVideos);
         setPage(2);
         setHasMore(more);
+
+           window.scrollTo({ top: 0});
       } catch (error) {
         console.error("Error fetching videos:", error);
       } finally {
@@ -151,7 +154,7 @@ return variant === "studio" ? (
 
     {hasMore && (
       <div className="col-span-full" ref={ref}>
-        {loading && <p className="mt-4 text-center">Loading more videos...</p>}
+        {loading && <SkeletonMainVideos/>}
       </div>
     )}
   </div>

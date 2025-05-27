@@ -4,6 +4,7 @@
 import Mux from "@mux/mux-node";
 import { revalidatePath } from "next/cache";
 import { UTApi } from "uploadthing/server";
+import { z } from "zod";
 
 import { getUser } from "@/lib/auth/auth-session";
 import { Prisma, PrismaClient, Video } from "@/lib/generated";
@@ -166,6 +167,9 @@ export async function getVideoById(videoId: string): Promise<VideoWithUser | nul
             where: { id: videoId },
             include: {
                 user: true,
+                likes: true,
+                dislikes: true,
+                _count: true,
             },
         });
 
@@ -425,3 +429,219 @@ export async function fetchVideos({
         hasMore,
     };
 }
+
+
+export async function likeVideoAction(videoId: string) {
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+
+    const userId = user.id;
+
+    const existingLike = await prisma.like.findUnique({
+        where: {
+            userId_videoId: {
+                userId,
+                videoId,
+            },
+        },
+    });
+
+    const existingDislike = await prisma.dislike.findUnique({
+        where: {
+            userId_videoId: {
+                userId,
+                videoId,
+            },
+        },
+    });
+
+    // Toggle like
+    if (existingLike) {
+        await prisma.like.delete({
+            where: { userId_videoId: { userId, videoId } },
+        });
+    } else {
+        if (existingDislike) {
+            await prisma.dislike.delete({
+                where: { userId_videoId: { userId, videoId } },
+            });
+        }
+        await prisma.like.create({
+            data: { userId, videoId },
+        });
+    }
+    revalidatePath(`/video/${videoId}`);
+}
+
+export async function dislikeVideoAction(videoId: string) {
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+
+    const userId = user.id;
+
+    const existingDislike = await prisma.dislike.findUnique({
+        where: {
+            userId_videoId: {
+                userId,
+                videoId,
+            },
+        },
+    });
+
+    const existingLike = await prisma.like.findUnique({
+        where: {
+            userId_videoId: {
+                userId,
+                videoId,
+            },
+        },
+    });
+
+    // Toggle dislike
+    if (existingDislike) {
+        await prisma.dislike.delete({
+            where: { userId_videoId: { userId, videoId } },
+        });
+    } else {
+        if (existingLike) {
+            await prisma.like.delete({
+                where: { userId_videoId: { userId, videoId } },
+            });
+        }
+        await prisma.dislike.create({
+            data: { userId, videoId },
+        });
+    }
+
+    revalidatePath(`/video/${videoId}`);
+}
+
+export async function getSubscriptionStatus(videoId: string, userId: string) {
+    const video = await prisma.video.findUnique({
+        where: { id: videoId },
+        select: { userId: true }, // Get the creatorId from the video
+    });
+
+    if (!video) {
+        throw new Error("Video not found");
+    }
+
+    const subscription = await prisma.subscription.findUnique({
+        where: {
+            viewerId_creatorId: {
+                viewerId: userId,
+                creatorId: video.userId,
+            },
+        },
+    });
+
+    return { isSubscribed: !!subscription };
+}
+
+// Toggle subscription for the viewer and creator
+export async function toggleSubscription(creatorId: string) {
+    const session = await getUser(); // Get logged in user
+    if (!session) throw new Error("Unauthorized");
+
+    const existingSubscription = await prisma.subscription.findUnique({
+        where: {
+            viewerId_creatorId: {
+                viewerId: session.id,
+                creatorId,
+            },
+        },
+    });
+
+    if (existingSubscription) {
+        // If already subscribed, unsubscribe
+        await prisma.subscription.delete({
+            where: {
+                viewerId_creatorId: {
+                    viewerId: session.id,
+                    creatorId,
+                },
+            },
+        });
+    } else {
+        // If not subscribed, subscribe
+        await prisma.subscription.create({
+            data: {
+                viewerId: session.id,
+                creatorId,
+            },
+        });
+    }
+
+    // Invalidate cache related to subscriptions
+    // revalidateTag("subscription-status");
+}
+
+
+const videoIdSchema = z.string().uuid(); // If your videoId is a UUID
+
+export const incrementVideoView = async (videoId: string) => {
+    const parsed = videoIdSchema.safeParse(videoId);
+
+    if (!parsed.success) {
+        console.error("Invalid videoId:", parsed.error.format());
+        throw new Error("Invalid video ID");
+    }
+
+    try {
+        const updatedVideo = await prisma.video.update({
+            where: {
+                id: parsed.data,
+            },
+            data: {
+                videoViews: {
+                    increment: 1,
+                },
+            },
+        });
+
+        revalidatePath("/videos"); // Or more specific: `/videos/${videoId}`
+        return updatedVideo;
+    } catch (error) {
+        console.error("Error incrementing video views:", error);
+        throw new Error("Failed to increment video views");
+    }
+};
+
+export const updateWatchHistory = async (
+    videoId: string,
+    watchedDuration: number,
+    progressPercentage: number,
+    completed: boolean
+) => {
+
+    const currentUser = await getUser();
+    if (!currentUser) {
+        throw new Error("Unauthorized");
+    }
+
+
+    await prisma.watchHistory.upsert({
+        where: {
+            userId_videoId: {
+                userId: currentUser.id, // handle auth context
+                videoId,
+            },
+        },
+        update: {
+            watchedDuration,
+            progressPercentage,
+            completed,
+        },
+        create: {
+            userId: currentUser.id,
+            videoId,
+            watchedDuration,
+            progressPercentage,
+            completed,
+        },
+    });
+};

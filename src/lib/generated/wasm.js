@@ -247,6 +247,35 @@ exports.Prisma.CommentDislikeScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.WatchHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  videoId: 'videoId',
+  watchedAt: 'watchedAt',
+  watchedDuration: 'watchedDuration',
+  progressPercentage: 'progressPercentage',
+  completed: 'completed',
+  lastWatchedAt: 'lastWatchedAt'
+};
+
+exports.Prisma.PlaylistScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId'
+};
+
+exports.Prisma.PlaylistVideoScalarFieldEnum = {
+  id: 'id',
+  playlistId: 'playlistId',
+  videoId: 'videoId',
+  position: 'position',
+  visibility: 'visibility',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -266,6 +295,12 @@ exports.VideoVisibility = exports.$Enums.VideoVisibility = {
   public: 'public'
 };
 
+exports.PlaylistVisibility = exports.$Enums.PlaylistVisibility = {
+  public: 'public',
+  private: 'private',
+  unlisted: 'unlisted'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -278,7 +313,10 @@ exports.Prisma.ModelName = {
   Subscription: 'Subscription',
   Comment: 'Comment',
   CommentLike: 'CommentLike',
-  CommentDislike: 'CommentDislike'
+  CommentDislike: 'CommentDislike',
+  WatchHistory: 'WatchHistory',
+  Playlist: 'Playlist',
+  PlaylistVideo: 'PlaylistVideo'
 };
 
 /**

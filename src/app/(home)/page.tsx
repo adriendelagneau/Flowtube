@@ -1,6 +1,6 @@
 import { getCategories } from "@/actions/category-actions";
 import { fetchVideos } from "@/actions/video-actions";
-import InfiniteScrollMovies from "@/components/infinitScroolVideos";
+import InfiniteScrollMovies from "@/components/infinite-scrool-videos";
 
 import { FilterCarousel } from "./components/filter-carousel";
 
