@@ -1,0 +1,11 @@
+node_modules
+.next
+dist
+build
+coverage
+
+# Generated code
+src/lib/generated
+
+# Vendor or external UI components you don't want to touch
+src/components/ui
