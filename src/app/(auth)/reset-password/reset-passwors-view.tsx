@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/auth-client";
 import { resetPasswordSchema } from "@/lib/zod";
 
-export const ResetPasswordView = () => {
+const ResetPasswordContent = () => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -146,5 +146,13 @@ export const ResetPasswordView = () => {
         </CardContent>
       </Card>
     </div>
+  );
+};
+
+export const ResetPasswordView = () => {
+  return (
+    <Suspense>
+      <ResetPasswordContent />
+    </Suspense>
   );
 };

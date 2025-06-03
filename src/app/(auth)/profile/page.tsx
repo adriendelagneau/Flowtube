@@ -3,7 +3,7 @@ import React from "react";
 
 const ProfilePage = async () => {
   // const session = await getUser();
-  
+
   return <div>ProfilePage</div>;
 };
 
