@@ -5,7 +5,7 @@ import { magicLink, captcha } from "better-auth/plugins";
 
 import { sendEmail } from "@/actions/email-actions";
 
-import { PrismaClient } from "../generated/prisma"; 
+import { PrismaClient } from "../generated"; 
 
 const prisma = new PrismaClient();
 

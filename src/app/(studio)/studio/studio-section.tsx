@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Video } from "@/lib/generated/prisma"; 
+import { Video } from "@/lib/generated"; 
 
 interface StudioSectionProps {
   videos: Video[];

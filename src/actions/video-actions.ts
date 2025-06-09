@@ -5,7 +5,7 @@ import Mux from "@mux/mux-node";
 // import { z } from "zod";
 
 import { getUser } from "@/lib/auth/auth-session";
-import { PrismaClient } from "@/lib/generated/prisma"; 
+import { PrismaClient } from "@/lib/generated";
 
 
 

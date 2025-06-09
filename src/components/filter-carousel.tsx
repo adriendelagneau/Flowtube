@@ -12,7 +12,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Category } from "@/lib/generated/prisma"; 
+import { Category } from "@/lib/generated"; 
 import { cn } from "@/lib/utils";
 
 export const FilterCarousel = ({ categories }: { categories: Category[] }) => {

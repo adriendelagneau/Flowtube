@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 
 import { SidebarHeader, useSidebar } from "@/components/ui/sidebar";
-import { User } from "@/lib/generated/prisma"; 
+import { User } from "@/lib/generated"; 
 import { cn } from "@/lib/utils";
 
 import { UserAvatar } from "./user-avatar";

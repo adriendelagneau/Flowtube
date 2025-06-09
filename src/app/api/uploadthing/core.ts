@@ -3,7 +3,7 @@ import { UploadThingError, UTApi } from "uploadthing/server";
 import { z } from "zod";
 
 import { getUser } from "@/lib/auth/auth-session";
-import { PrismaClient } from "@/lib/generated/prisma";
+import { PrismaClient } from "@/lib/generated";
 
 
 

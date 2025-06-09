@@ -16,7 +16,7 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { User } from "@/lib/generated/prisma"; 
+import { User } from "@/lib/generated"; 
 
 import { StudioSidebarHeader } from "./studio-sidebar-header";
 
