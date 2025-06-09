@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
+
 import { HomeNavbar } from "./components/layout/navbar/home-navbar";
 import { HomeSidebar } from "./components/layout/sidebar/hoeme-sidebar";
 

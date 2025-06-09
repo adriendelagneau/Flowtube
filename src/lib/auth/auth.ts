@@ -20,6 +20,7 @@ export const auth = betterAuth({
       secretKey: process.env.RECAPTCHA_SECRET_KEY!,
     }),
     magicLink({
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       sendMagicLink: async ({ email, token, url }, req) => {
         const username = email.split("@")[0]; // fallback display name
         await sendEmail({

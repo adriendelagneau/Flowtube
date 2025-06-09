@@ -21,7 +21,6 @@ export const ResponsiveModal = ({
 }: ResponsiveModalProps) => {
 
 
-  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>

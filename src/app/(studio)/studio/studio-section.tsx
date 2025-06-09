@@ -15,7 +15,7 @@ interface StudioSectionProps {
 
 export const StudioSection = ({ videos, hasMore }: StudioSectionProps) => {
 
-  console.log(videos, hasMore)
+  console.log(videos, hasMore);
   return (
     <div>
       <div className="border-y">

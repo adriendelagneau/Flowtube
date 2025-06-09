@@ -1,7 +1,8 @@
-"use client"
+"use client";
+
+import { useAuthModal } from "@/lib/store/useAuthStore";
 
 import { SignInView } from "./sign-in-view"; 
-import { useAuthModal } from "@/lib/store/useAuthStore";
 import { AuthModal } from "../../auth-modal";
 
 export const SignInModal = () => {

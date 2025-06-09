@@ -23,12 +23,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 // import { useAuthState } from "@/hooks/useAuthState";
+import { useAuthState } from "@/hooks/useAuthState";
 import { authClient } from "@/lib/auth/auth-client";
 
 import CardWrapper from "../card-wrapper";
 import FormError from "../form-error";
 import SocialButton from "./social-button";
-import { useAuthState } from "@/hooks/useAuthState";
 
 // Zod schema for magic link sign-in
 const MagicLinkSignInSchema = z.object({

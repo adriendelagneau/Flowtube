@@ -3,16 +3,15 @@
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-
+import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth/auth-client";
+import { useAuthModal } from "@/lib/store/useAuthStore";
 
 import { UserButton } from "./user-button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useAuthModal } from "@/lib/store/useAuthStore";
 
 // Inner logic component for session logic
 export const AuthButton = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 

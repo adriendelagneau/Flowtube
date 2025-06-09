@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { getUser } from "@/lib/auth/auth-session";
 
-import { StudioNavbar } from "./components/layout/sidebar/studio-navbar";
+import { StudioNavbar } from "./components/layout/navbar/studio-navbar";
 import { StudioSidebar } from "./components/layout/sidebar/studio-sidebar";
 
 export default async function StudioLayout({

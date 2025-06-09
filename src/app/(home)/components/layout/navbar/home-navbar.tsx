@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+
+import { ThemeToggleButton } from "@/components/buttons/theme-toggle-button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 // import { AuthButton } from "./auth-button"; 
+import { AuthButton } from "./auth-button";
 import { SearchInput } from "./search-input";
 import { SearchInputSm } from "./search-input-sm";
 import { StudioButton } from "./studio-button";
-import { ThemeToggleButton } from "@/components/buttons/theme-toggle-button";
-import { AuthButton } from "./auth-button";
 
 
 export const HomeNavbar = async () => {

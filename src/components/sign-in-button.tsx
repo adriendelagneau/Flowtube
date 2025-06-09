@@ -1,8 +1,10 @@
-"use client"
+"use client";
 
-import { useAuthModal } from '@/lib/store/useAuthStore';
-import React from 'react'
-import { Button } from './ui/button';
+import React from "react";
+
+import { useAuthModal } from "@/lib/store/useAuthStore";
+
+import { Button } from "./ui/button";
 
 const SgnInButton = () => {
       const { open } = useAuthModal();
@@ -10,7 +12,7 @@ const SgnInButton = () => {
      <Button onClick={open}>
       Se connecter
     </Button>
-  )
-}
+  );
+};
 
-export default SgnInButton
+export default SgnInButton;

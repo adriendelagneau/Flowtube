@@ -24,7 +24,7 @@ export const FilterCarousel = ({ categories }: { categories: Category[] }) => {
   const searchParams = useSearchParams();
   const categorySlug = searchParams.get("category");
 
-  console.log(categories)
+  console.log(categories);
 
 
   const onSelect = (value: string | null) => {
