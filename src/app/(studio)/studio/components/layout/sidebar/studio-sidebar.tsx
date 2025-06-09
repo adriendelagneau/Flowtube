@@ -16,15 +16,10 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { User } from "@/lib/generated"; 
 
 import { StudioSidebarHeader } from "./studio-sidebar-header";
 
-interface StudioSidebarProps {
-  user: User | null;
-}
-
-export const StudioSidebar = ({ user }: StudioSidebarProps) => {
+export const StudioSidebar = () => {
   const pathname = usePathname();
 
   return (
@@ -42,7 +37,8 @@ export const StudioSidebar = ({ user }: StudioSidebarProps) => {
                 </div>
               </Link>
             </div>
-            <StudioSidebarHeader user={user} />
+
+            <StudioSidebarHeader />
             <SidebarMenuItem>
               <SidebarMenuButton
                 isActive={pathname === "/studio"}
