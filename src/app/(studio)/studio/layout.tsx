@@ -1,5 +1,5 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { getUser } from "@/lib/auth/auth-session";
+// import { getUser } from "@/lib/auth/auth-session";
 
 import { StudioNavbar } from "./components/layout/navbar/studio-navbar";
 // import { StudioSidebar } from "./components/layout/sidebar/studio-sidebar";
@@ -9,10 +9,10 @@ export default async function StudioLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser();
-  if (!user) {
-    return <div>Unauthorized</div>; // ✅ Handle missing user properly
-  }
+  // const user = await getUser();
+  // if (!user) {
+  //   return <div>Unauthorized</div>; // ✅ Handle missing user properly
+  // }
 
   return (
     <SidebarProvider>
