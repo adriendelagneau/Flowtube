@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
 import { SignInModal } from "@/components/auth/log-in/sign-in-modal";
-import { RecaptchaProvider } from "@/components/providers/google-captcha-provider copy";
+import { RecaptchaProvider } from "@/components/providers/google-captcha-provider";
+import TanstackProvider from "@/components/providers/tanstackprovider";
 import { ThemeProvider } from "@/components/providers/themes-provider";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+      
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -40,9 +42,8 @@ export default function RootLayout({
         >
           <RecaptchaProvider>
             <Toaster />
-            <SignInModal/>
-            
-            {children}
+            <SignInModal />
+            <TanstackProvider>{children}</TanstackProvider>
           </RecaptchaProvider>
         </ThemeProvider>
       </body>

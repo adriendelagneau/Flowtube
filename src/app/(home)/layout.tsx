@@ -5,7 +5,6 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { HomeNavbar } from "./components/layout/navbar/home-navbar";
 import { HomeSidebar } from "./components/layout/sidebar/hoeme-sidebar";
 
-
 export default async function HomeLayout({
   children,
 }: Readonly<{
@@ -16,14 +15,14 @@ export default async function HomeLayout({
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
-      <div className="w-full">
-        <HomeNavbar />
-        <div className="flex pt-[4rem]">
-          <HomeSidebar />
-          <main className="flex-1 overflow-y-auto">{children}</main>
+      <SidebarProvider defaultOpen={defaultOpen}>
+        <div className="w-full">
+          <HomeNavbar />
+          <div className="flex pt-[4rem]">
+            <HomeSidebar />
+            <main className="flex-1 overflow-y-auto">{children}</main>
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
   );
 }

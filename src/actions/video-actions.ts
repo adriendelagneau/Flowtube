@@ -5,13 +5,10 @@ import Mux from "@mux/mux-node";
 import { revalidatePath } from "next/cache";
 import { UTApi } from "uploadthing/server";
 
-import { PrismaClient, Video } from "@/generated";
+import { Prisma, PrismaClient, Video } from "@/generated";
 import { getUser } from "@/lib/auth/auth-session";
-import { VideoWithUser } from "@/types";
 import { inputSchema } from "@/lib/zod";
-
-
-
+import { VideoWithUser } from "@/types";
 
 
 const mux = new Mux({
@@ -98,36 +95,48 @@ export async function getUserVideos({
 }
 
 export async function updateVideo(
-    videoId: string,
-    data: {
-        title: string;
-        description: string;
-        visibility: "public" | "private";
-        categoryId: string;
-    }
+  videoId: string,
+  data: {
+    title: string;
+    description: string;
+    visibility: "public" | "private";
+    categoryId?: string;
+  }
 ) {
-    const user = await getUser();
-    if (!user) {
-        throw new Error("Unauthorized");
+  const user = await getUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    // Validate categoryId if provided
+    if (data.categoryId) {
+      const categoryExists = await prisma.category.findUnique({
+        where: { id: data.categoryId },
+      });
+
+      if (!categoryExists) {
+        throw new Error("Invalid categoryId");
+      }
     }
 
-    try {
-        const video = await prisma.video.update({
-            where: { id: videoId, userId: user.id },
-            data: {
-                title: data.title,
-                description: data.description,
-                visibility: data.visibility,
-                categoryId: data.categoryId,
-            },
-        });
+    const video = await prisma.video.update({
+      where: { id: videoId, userId: user.id },
+      data: {
+        title: data.title,
+        description: data.description,
+        visibility: data.visibility,
+        categoryId: data.categoryId || null, // Allow unsetting
+      },
+    });
 
-        return video;
-    } catch (error) {
-        console.error("Error updating video:", error);
-        throw new Error("Unable to update video");
-    }
+    return video;
+  } catch (error) {
+    console.error("Error updating video:", error);
+    throw new Error("Unable to update video");
+  }
 }
+
 
 export async function removeVideo(videoId: string) {
     const user = await getUser();
@@ -256,4 +265,64 @@ export async function restoreThumbnail(formData: FormData): Promise<Video> {
     revalidatePath(`/video/${existingVideo.id}`);
 
     return updatedVideo;
+}
+export async function fetchVideos({
+    query,
+    page = 1,
+    pageSize = 9,
+    categorySlug,
+    orderBy = "newest",
+}: {
+    query?: string;
+    page?: number;
+    pageSize?: number;
+    categorySlug?: string;
+    orderBy?: "newest" | "oldest" | "popular";
+}) {
+    const skip = (page - 1) * pageSize;
+
+    const whereClause: Prisma.VideoWhereInput = {
+        visibility: "public",
+    };
+
+    if (query) {
+        whereClause.title = {
+            contains: query,
+            mode: Prisma.QueryMode.insensitive,
+        };
+    }
+
+    if (categorySlug) {
+        whereClause.category = {
+            slug: categorySlug,
+        };
+    }
+
+    let orderClause: Prisma.VideoOrderByWithRelationInput = { createdAt: "desc" };
+    if (orderBy === "oldest") {
+        orderClause = { createdAt: "asc" };
+    } else if (orderBy === "popular") {
+        orderClause = { videoViews: "desc" };
+    }
+
+    const [videos, total] = await Promise.all([
+        prisma.video.findMany({
+            where: whereClause,
+            orderBy: orderClause,
+            skip,
+            take: pageSize,
+            include: {
+                user: true,
+                category: true,
+            },
+        }),
+        prisma.video.count({ where: whereClause }),
+    ]);
+
+    const hasMore = skip + videos.length < total;
+
+    return {
+        videos,
+        hasMore,
+    };
 }

@@ -2,8 +2,8 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError, UTApi } from "uploadthing/server";
 import { z } from "zod";
 
-import { getUser } from "@/lib/auth/auth-session";
 import { PrismaClient } from "@/generated";
+import { getUser } from "@/lib/auth/auth-session";
 
 
 

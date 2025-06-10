@@ -1,10 +1,11 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+// import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
 import { getUserVideos } from "@/actions/video-actions";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Video } from "@/generated";
 
 import VideoStudioRowCard from "./studio/studio-card";
@@ -78,16 +79,34 @@ const InfiniteScrollStudio = ({
         <VideoStudioRowCard key={video.id} video={video as Video} />
       ))}
       {hasMore && (
-        <tr ref={ref}>
-          <td colSpan={7} className="py-4 text-center">
-            {loading && (
-              <Loader2 className="mx-auto h-8 w-8 animate-spin text-sky-600" />
-            )}
-          </td>
-        </tr>
+        <>
+          {loading &&
+            Array.from({ length: 9 }).map((_, index) => (
+              <VideoStudioRowSkeleton key={`skeleton-${index}`} />
+            ))}
+          <tr ref={ref}>
+            <td colSpan={7}></td>
+          </tr>
+        </>
       )}
     </>
   );
 };
 
 export default InfiniteScrollStudio;
+
+const VideoStudioRowSkeleton = () => {
+  return (
+    <tr>
+      <td colSpan={7} className="py-4 pr-6 pl-6">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-[80px] w-36 rounded-md" />
+          <div className="flex w-full max-w-xs flex-col gap-2">
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-3 w-full" />
+          </div>
+        </div>
+      </td>
+    </tr>
+  );
+};

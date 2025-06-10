@@ -66,3 +66,5 @@ export default function VideoStudioRowCard({ video }: { video: Video }) {
     </TableRow>
   );
 }
+
+
