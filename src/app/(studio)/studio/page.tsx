@@ -1,10 +1,14 @@
 import React from "react";
 
-import { getUser } from "@/lib/auth/auth-session";
+import { getUserVideos } from "@/actions/video-actions";
+
+import { StudioSection } from "./studio-section";
 
 const StudioPage = async () => {
-  const user = await getUser();
-  console.log(user);
+  const data = await getUserVideos({ page: 1, pageSize: 9 });
+
+  console.log(data);
+
   return (
     <div className="flex flex-col gap-y-6 pt-2.5">
       <div className="px-4">
@@ -13,6 +17,7 @@ const StudioPage = async () => {
           Manage your channel content and videos
         </p>
       </div>
+      <StudioSection videos={data.videos} hasMore={data.hasMore} />
     </div>
   );
 };
