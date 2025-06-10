@@ -21,7 +21,7 @@ export const StudioSidebarHeader = () => {
 
   if (isPending) {
     return (
-      <SidebarHeader className="flex items-center justify-center pb-4">
+      <SidebarHeader className="flex items-center justify-center pb-4 mb-4">
         <div className="flex flex-col items-center">
           <Skeleton
             className={cn(
