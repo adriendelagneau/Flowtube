@@ -17,13 +17,14 @@ const mux = new Mux({
 const prisma = new PrismaClient();
 
 export async function createVideo() {
+    console.log("create video");
     const user = await getUser();
     if (!user) {
         throw new Error("Unauthorized");
     }
 
     const userId = user.id;
-
+console.log(user, "eser");
     try {
         const upload = await mux.video.uploads.create({
             new_asset_settings: {

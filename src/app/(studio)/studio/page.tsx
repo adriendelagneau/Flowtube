@@ -1,7 +1,10 @@
 import React from "react";
 
+import { getUser } from "@/lib/auth/auth-session";
+
 const StudioPage = async () => {
- 
+  const user = await getUser();
+  console.log(user);
   return (
     <div className="flex flex-col gap-y-6 pt-2.5">
       <div className="px-4">
@@ -10,7 +13,6 @@ const StudioPage = async () => {
           Manage your channel content and videos
         </p>
       </div>
-
     </div>
   );
 };
