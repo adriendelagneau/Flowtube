@@ -198,6 +198,22 @@ exports.Prisma.VideoScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.LikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  videoId: 'videoId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DislikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  videoId: 'videoId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -223,7 +239,9 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   Category: 'Category',
-  Video: 'Video'
+  Video: 'Video',
+  Like: 'Like',
+  Dislike: 'Dislike'
 };
 
 /**

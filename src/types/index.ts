@@ -1,6 +1,15 @@
+import { Dislike, Like, User, Video } from "@/generated";
 
 
-
+export interface VideoWithUser extends Video {
+    user: User;
+    likes: Like[];
+    dislikes: Dislike[];
+    _count: {
+      likes: number;
+      dislikes: number;
+    };
+  }
 
 export type UploadFileResponse<TServerOutput> = {
   name: string;             // Name of the uploaded file

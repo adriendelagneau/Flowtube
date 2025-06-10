@@ -8,19 +8,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
   id    String  @id @default(uuid())
   email String  @unique
   name  String?
 
-  emailVerified   Boolean
-  image           String?
-  createdAt       DateTime
-  updatedAt       DateTime
-  sessions        Session[]
-  accounts        Account[]
-    videos          Video[]
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+  videos        Video[]
+  likes         Like[]
+  dislikes      Dislike[]
 
   @@map("user")
 }
@@ -78,8 +79,8 @@ model Category {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  videos      Video[]
-  
+  videos Video[]
+
   @@map("category")
 }
 
@@ -111,11 +112,39 @@ model Video {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  likes    Like[]
+  dislikes Dislike[]
 
-
-  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  category      Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
   @@map("video")
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  videoId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video Video @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, videoId])
+  @@map("like")
+}
+
+model Dislike {
+  id        String   @id @default(uuid())
+  userId    String
+  videoId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video Video @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, videoId])
+  @@map("dislike")
 }

@@ -5,9 +5,8 @@ import { getUserVideos } from "@/actions/video-actions";
 import { StudioSection } from "./studio-section";
 
 const StudioPage = async () => {
-  const data = await getUserVideos();
+ const { videos, hasMore } = await getUserVideos({});
 
-  console.log(data);
 
   return (
     <div className="flex flex-col gap-y-6 pt-2.5">
@@ -17,7 +16,7 @@ const StudioPage = async () => {
           Manage your channel content and videos
         </p>
       </div>
-      <StudioSection videos={data}  />
+      <StudioSection videos={videos} hasMore={hasMore} />
     </div>
   );
 };
