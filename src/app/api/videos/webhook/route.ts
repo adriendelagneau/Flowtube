@@ -9,7 +9,7 @@ import { headers } from "next/headers";
 import { UTApi } from "uploadthing/server";
 
 
-import { PrismaClient } from "@/lib/generated";
+import { PrismaClient } from "@/generated";
 import { mux } from "@/lib/mux";
 
 const prisma = new PrismaClient();

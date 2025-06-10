@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Video } from "@/lib/generated"; 
+import { Video } from "@/generated";
 
 interface StudioSectionProps {
   videos: Video[];
@@ -14,7 +14,6 @@ interface StudioSectionProps {
 }
 
 export const StudioSection = ({ videos, hasMore }: StudioSectionProps) => {
-
   console.log(videos, hasMore);
   return (
     <div>

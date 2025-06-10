@@ -5,7 +5,8 @@ import Mux from "@mux/mux-node";
 // import { z } from "zod";
 
 import { getUser } from "@/lib/auth/auth-session";
-import { PrismaClient } from "@/lib/generated";
+
+import { PrismaClient } from "@/generated";
 
 
 
@@ -24,7 +25,7 @@ export async function createVideo() {
     }
 
     const userId = user.id;
-console.log(user, "eser");
+    console.log(user, "eser");
     try {
         const upload = await mux.video.uploads.create({
             new_asset_settings: {

@@ -12,7 +12,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Category } from "@/lib/generated"; 
+import { Category } from "@/generated";
 import { cn } from "@/lib/utils";
 
 export const FilterCarousel = ({ categories }: { categories: Category[] }) => {
@@ -25,7 +25,6 @@ export const FilterCarousel = ({ categories }: { categories: Category[] }) => {
   const categorySlug = searchParams.get("category");
 
   console.log(categories);
-
 
   const onSelect = (value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -60,7 +59,7 @@ export const FilterCarousel = ({ categories }: { categories: Category[] }) => {
       <Carousel
         setApi={setApi}
         opts={{ align: "start", dragFree: true }}
-        className="w-full px-12 mt-60"
+        className="mt-60 w-full px-12"
       >
         <CarouselContent className="-ml-2">
           {/* "All" Option */}

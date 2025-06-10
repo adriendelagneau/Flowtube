@@ -13,7 +13,7 @@ const compat = new FlatCompat({
 const eslintConfig = [
   {
     ignores: [
-      "src/lib/generated",
+      "src/generated",
       "src/components/ui"
     ],
   },
