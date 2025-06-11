@@ -95,46 +95,46 @@ export async function getUserVideos({
 }
 
 export async function updateVideo(
-  videoId: string,
-  data: {
-    title: string;
-    description: string;
-    visibility: "public" | "private";
-    categoryId?: string;
-  }
+    videoId: string,
+    data: {
+        title: string;
+        description: string;
+        visibility: "public" | "private";
+        categoryId?: string;
+    }
 ) {
-  const user = await getUser();
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
-
-  try {
-    // Validate categoryId if provided
-    if (data.categoryId) {
-      const categoryExists = await prisma.category.findUnique({
-        where: { id: data.categoryId },
-      });
-
-      if (!categoryExists) {
-        throw new Error("Invalid categoryId");
-      }
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
     }
 
-    const video = await prisma.video.update({
-      where: { id: videoId, userId: user.id },
-      data: {
-        title: data.title,
-        description: data.description,
-        visibility: data.visibility,
-        categoryId: data.categoryId || null, // Allow unsetting
-      },
-    });
+    try {
+        // Validate categoryId if provided
+        if (data.categoryId) {
+            const categoryExists = await prisma.category.findUnique({
+                where: { id: data.categoryId },
+            });
 
-    return video;
-  } catch (error) {
-    console.error("Error updating video:", error);
-    throw new Error("Unable to update video");
-  }
+            if (!categoryExists) {
+                throw new Error("Invalid categoryId");
+            }
+        }
+
+        const video = await prisma.video.update({
+            where: { id: videoId, userId: user.id },
+            data: {
+                title: data.title,
+                description: data.description,
+                visibility: data.visibility,
+                categoryId: data.categoryId || null, // Allow unsetting
+            },
+        });
+
+        return video;
+    } catch (error) {
+        console.error("Error updating video:", error);
+        throw new Error("Unable to update video");
+    }
 }
 
 
@@ -293,6 +293,7 @@ export async function fetchVideos({
     }
 
     if (categorySlug) {
+        console.log(categorySlug, "category slug");
         whereClause.category = {
             slug: categorySlug,
         };
@@ -326,3 +327,24 @@ export async function fetchVideos({
         hasMore,
     };
 }
+export const fetchVideosPaginated = async ({
+    pageParam = 1,
+    query = "",
+    categorySlug = "",
+    orderBy = "newest",
+    pageSize = 9,
+}: {
+    pageParam?: number;
+    query?: string;
+    categorySlug?: string;
+    orderBy?: "newest" | "oldest" | "popular";
+    pageSize?: number;
+}) => {
+    return await fetchVideos({
+        page: pageParam,
+        pageSize,
+        query,
+        categorySlug,
+        orderBy,
+    });
+};

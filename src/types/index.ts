@@ -11,6 +11,10 @@ export interface VideoWithUser extends Video {
     };
   }
 
+    export interface VideoWithUserAndCount extends Video {
+    user: User;
+  }
+
 export type UploadFileResponse<TServerOutput> = {
   name: string;             // Name of the uploaded file
   size: number;             // Size of the file in bytes
