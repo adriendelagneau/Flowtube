@@ -1,6 +1,7 @@
 import { getCategories } from "@/actions/category-actions";
 import { FilterCarousel } from "@/components/filter-carousel";
-import HomeMain from "@/components/HomeMain";
+
+import HomeMain from "./home-main";
 
 const HomePage = async () => {
   const categories = await getCategories();

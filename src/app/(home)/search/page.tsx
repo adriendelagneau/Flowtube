@@ -1,107 +1,96 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 
-import { fetchVideos } from "@/actions/video-actions";
-import VideoCardSkeleton from "@/components/cards/video-card-skeleton";
-import InfiniteScrollVideos from "@/components/infinitScroolVideos";
-import { NoResults } from "@/components/no-results"; 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { VideoWithUserAndCount } from "@/types";
+import { fetchVideosPaginated } from "@/actions/video-actions";
+import VideoCard from "@/components/cards/video-card";
+import { Skeleton } from "@/components/ui/skeleton"; // Adjust path to your skeleton component
 
-const SearchPage = () => {
+export default function SearchPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const { ref, inView } = useInView({ rootMargin: "30px" });
 
   const query = searchParams.get("query") || "";
+  const categorySlug = searchParams.get("category") || "";
   const orderBy =
-    (searchParams.get("orderBy") as "newest" | "oldest" | "popular" | null) ||
+    (searchParams.get("orderBy") as "newest" | "oldest" | "popular") ||
     "newest";
 
-  const [videos, setVideos] = useState<VideoWithUserAndCount[]>([]);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useInfiniteQuery({
+      queryKey: ["videos", query, categorySlug, orderBy],
+      queryFn: ({ pageParam = 1 }) =>
+        fetchVideosPaginated({
+          pageParam,
+          query,
+          categorySlug,
+          orderBy,
+          pageSize: 9,
+        }),
+
+      getNextPageParam: (lastPage, allPages) => {
+        return lastPage.hasMore ? allPages.length + 1 : undefined;
+      },
+      initialPageParam: 1,
+      refetchOnWindowFocus: false,
+    });
 
   useEffect(() => {
-    const fetchInitialVideos = async () => {
-      setIsLoading(true);
-      const res = await fetchVideos({
-        query: query,
-        page: 1,
-        pageSize: 9,
-        orderBy,
-      });
-      setVideos(res.videos);
-      setHasMore(res.hasMore);
-      setIsLoading(false);
-    };
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-    fetchInitialVideos();
-  }, [query, orderBy]);
+  const videos = data?.pages.flatMap((page) => page.videos) || [];
 
-  const handleOrderChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("orderBy", value);
-    router.push(`/search?${params.toString()}`);
-  };
+  // Number of skeletons to show during loading
+  const skeletonCount = 9;
 
   return (
-    <div className="">
-      {/* Sort Dropdown */}
-      <div className="mt-4 mb-3 flex justify-end">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="mr-4">
-              {orderBy
-                ? orderBy.charAt(0).toUpperCase() + orderBy.slice(1)
-                : "Sort By"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => handleOrderChange("newest")}>
-              Newest
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleOrderChange("oldest")}>
-              Oldest
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleOrderChange("popular")}>
-              Most Popular
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+    <div className="no-scrollbar grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
+      {videos.map((video) => (
+        <div key={video.id}>
+          <VideoCard video={video} />
+        </div>
+      ))}
 
-      {/* Videos or No Results */}
-      {isLoading ? (
-        <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 12 }).map((_, idx) => (
-            <VideoCardSkeleton key={idx} />
-          ))}
+      {/* Render skeleton placeholders during initial load */}
+      {(isLoading || (isFetchingNextPage && hasNextPage)) &&
+        Array.from({ length: skeletonCount }).map((_, idx) => (
+         <div key={`skeleton-${idx}`} className="overflow-hidden rounded-sm pb-2">
+            {/* Thumbnail */}
+            <Skeleton className="aspect-video w-full rounded-sm" />
+
+            {/* Video meta */}
+            <div className="mt-3 flex items-start justify-between px-1">
+              <div className="flex min-w-0 flex-1 gap-3">
+                <Skeleton className="h-7 w-7 rounded-full" />
+
+                <div className="flex w-full flex-col gap-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                  <Skeleton className="h-3 w-2/3" />
+                </div>
+              </div>
+
+              <Skeleton className="h-8 w-8 rounded-full" />
+            </div>
+          </div>
+        ))}
+
+      {hasNextPage && (
+        <div className="col-span-full" ref={ref}>
         </div>
-      ) : videos.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-10">
-          <NoResults />
-          <p className="text-muted-foreground mt-4">
-            No videos found for your search.
-          </p>
-        </div>
-      ) : (
-        <InfiniteScrollVideos
-        
-          initialVideos={videos}
-          hasMore={hasMore}
-    
-        />
+      )}
+
+      {!hasNextPage && videos.length === 0 && !isLoading && (
+        <p className="text-teal-800 col-span-full text-center">No videos found.</p>
       )}
     </div>
   );
-};
+}
 
-export default SearchPage;
+
