@@ -19,7 +19,7 @@ export const HomeNavbar = async () => {
           <SidebarTrigger className="cursor-pointer" />
           <Link href={"/"}>
             <div className="flex items-center gap-1 p-4">
-              <Image src="/logo3.png" alt="logo" width={32} height={32} />
+              <Image src="/logo3.png" alt="logo" width={28} height={28} />
               <p className="hidden text-xl font-semibold tracking-tight md:block">
                 FLOWTUBE
               </p>

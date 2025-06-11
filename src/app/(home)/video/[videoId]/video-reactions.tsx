@@ -1,9 +1,11 @@
 "use client";
 
+// import confetti from "canvas-confetti";
 import { ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
 import React, { useOptimistic, useTransition } from "react";
-
 // import { dislikeVideoAction, likeVideoAction } from "@/actions/video-actions";
+import { toast } from "sonner";
+
 import { dislikeVideoAction, likeVideoAction } from "@/actions/video-actions";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -25,8 +27,8 @@ const VideoReactions = ({ video }: VideoReactionsProps) => {
       ? "dislike"
       : null;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isPending, startTransition] = useTransition();
-  console.log(isPending);
 
   const [optimisticState, updateOptimisticState] = useOptimistic(
     {
@@ -69,6 +71,7 @@ const VideoReactions = ({ video }: VideoReactionsProps) => {
   );
 
   const handleReaction = (type: "like" | "dislike") => {
+    if (!user) return toast("Sign-in to react !");
     startTransition(async () => {
       updateOptimisticState(type);
       if (type === "like") {
