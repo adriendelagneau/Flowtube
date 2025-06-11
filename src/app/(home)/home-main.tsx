@@ -51,10 +51,9 @@ export default function HomeMain() {
 
   return (
     <div className="no-scrollbar grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
+      
       {videos.map((video) => (
-        <div key={video.id}>
-          <VideoCard video={video} />
-        </div>
+          <VideoCard video={video} key={video.id}/> 
       ))}
 
       {/* Render skeleton placeholders during initial load */}

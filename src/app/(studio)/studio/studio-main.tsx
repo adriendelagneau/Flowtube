@@ -74,6 +74,7 @@ export default function StudioMain() {
             </TableRow>
           </TableHeader>
           <TableBody className="w-full">
+            
             {videos.map((video) => (
               <VideoStudioRowCard key={video.id} video={video} />
             ))}
