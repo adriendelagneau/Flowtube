@@ -4,12 +4,11 @@ import Link from "next/link";
 import { ThemeToggleButton } from "@/components/buttons/theme-toggle-button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
-// import { AuthButton } from "./auth-button"; 
+// import { AuthButton } from "./auth-button";
 import { AuthButton } from "./auth-button";
 import { SearchInput } from "./search-input";
 import { SearchInputSm } from "./search-input-sm";
 import { StudioButton } from "./studio-button";
-
 
 export const HomeNavbar = async () => {
   return (
@@ -17,10 +16,10 @@ export const HomeNavbar = async () => {
       <div className="flex w-full items-center gap-2 md:gap-4">
         {/** Menu & Logo */}
         <div className="flex flex-shrink-0 items-center">
-          <SidebarTrigger className=" cursor-pointer" />
+          <SidebarTrigger className="cursor-pointer" />
           <Link href={"/"}>
             <div className="flex items-center gap-1 p-4">
-              <Image src="/logo.svg" alt="logo" width={32} height={32} />
+              <Image src="/logo3.png" alt="logo" width={32} height={32} />
               <p className="hidden text-xl font-semibold tracking-tight md:block">
                 FLOWTUBE
               </p>
@@ -49,7 +48,7 @@ export const HomeNavbar = async () => {
           {/** auth button */}
           <AuthButton />
 
-            {/* <Suspense fallback={<AuthButtonSkeleton />}>
+          {/* <Suspense fallback={<AuthButtonSkeleton />}>
               <AuthButton />
             </Suspense> */}
         </div>

@@ -1,28 +1,30 @@
 import React from "react";
 
+import { Button } from "@/components/ui/button";
 import { VideoWithUser } from "@/types";
 
 import { ShareButton } from "../share-button";
 import VideoDescription from "./video-description";
 import VideoMenu from "./video-menu";
-import VideoOwner from "./video-owner";
+// import VideoOwner from "./video-owner";
 import VideoReactions from "./video-reactions";
 interface VideoTopRowProps {
   video: VideoWithUser;
-  subscription: boolean;
+  // subscription: boolean;
 }
 
-const VideoTopRow = ({ video, subscription }: VideoTopRowProps) => {
+const VideoTopRow = ({ video }: VideoTopRowProps) => {
   return (
     <div className="mt-4 flex flex-col gap-4">
       <h1 className="text-xl font-semibold">{video.title}</h1>
       <div className="text-xl font-semibold">
         <div className="mb-3 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <VideoOwner
+          <Button>Subscribe</Button>
+          {/* <VideoOwner
             user={video.user}
             videoId={video.id}
             subscription={subscription}
-          />
+          /> */}
           <div className="-mb-2 flex gap-2 overflow-x-auto pb-2 sm:mb-0 sm:min-w-[calc(50%-6px)] sm:justify-end sm:overflow-visible sm:pb-0">
             <VideoReactions video={video} />
             <ShareButton

@@ -16,7 +16,7 @@ export const StudioNavbar = () => {
           <SidebarTrigger />
           <Link href={"/studio"}>
             <div className="flex items-center gap-1 p-4">
-              <Image src="/logo.svg" alt="logo" width={32} height={32} />
+              <Image src="/logo3.png" alt="logo" width={32} height={32} />
               <p className="text-xl font-semibold tracking-tight">Studio</p>
             </div>
           </Link>

@@ -8,7 +8,7 @@ import { VideoWithUser } from "@/types";
 
 import VideoBanner from "./video-banner";
 import VideoPlayer from "./video-player";
-// import VideoTopRow from "./video-top-row";
+import VideoTopRow from "./video-top-row";
 
 interface VideoSectionProps {
   video: VideoWithUser;
@@ -44,7 +44,7 @@ export const VideoView = ({ video }: VideoSectionProps) => {
         />
       </div>
       <VideoBanner status={video.muxStatus || ""} />
-      {/* <VideoTopRow video={video} subscription={subscription} /> */}
+      <VideoTopRow video={video}  />
     </>
   );
 };

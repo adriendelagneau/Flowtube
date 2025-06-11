@@ -137,7 +137,6 @@ export async function updateVideo(
     }
 }
 
-
 export async function removeVideo(videoId: string) {
     const user = await getUser();
     if (!user) {
@@ -266,6 +265,7 @@ export async function restoreThumbnail(formData: FormData): Promise<Video> {
 
     return updatedVideo;
 }
+
 export async function fetchVideos({
     query,
     page = 1,
@@ -327,6 +327,7 @@ export async function fetchVideos({
         hasMore,
     };
 }
+
 export const fetchVideosPaginated = async ({
     pageParam = 1,
     query = "",
@@ -348,3 +349,93 @@ export const fetchVideosPaginated = async ({
         orderBy,
     });
 };
+
+export async function likeVideoAction(videoId: string) {
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+
+    const userId = user.id;
+
+    const existingLike = await prisma.like.findUnique({
+        where: {
+            userId_videoId: {
+                userId,
+                videoId,
+            },
+        },
+    });
+
+    const existingDislike = await prisma.dislike.findUnique({
+        where: {
+            userId_videoId: {
+                userId,
+                videoId,
+            },
+        },
+    });
+
+    // Toggle like
+    if (existingLike) {
+        await prisma.like.delete({
+            where: { userId_videoId: { userId, videoId } },
+        });
+    } else {
+        if (existingDislike) {
+            await prisma.dislike.delete({
+                where: { userId_videoId: { userId, videoId } },
+            });
+        }
+        await prisma.like.create({
+            data: { userId, videoId },
+        });
+    }
+    revalidatePath(`/video/${videoId}`);
+}
+
+export async function dislikeVideoAction(videoId: string) {
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+
+    const userId = user.id;
+
+    const existingDislike = await prisma.dislike.findUnique({
+        where: {
+            userId_videoId: {
+                userId,
+                videoId,
+            },
+        },
+    });
+
+    const existingLike = await prisma.like.findUnique({
+        where: {
+            userId_videoId: {
+                userId,
+                videoId,
+            },
+        },
+    });
+
+    // Toggle dislike
+    if (existingDislike) {
+        await prisma.dislike.delete({
+            where: { userId_videoId: { userId, videoId } },
+        });
+    } else {
+        if (existingLike) {
+            await prisma.like.delete({
+                where: { userId_videoId: { userId, videoId } },
+            });
+        }
+        await prisma.dislike.create({
+            data: { userId, videoId },
+        });
+    }
+
+    revalidatePath(`/video/${videoId}`);
+}
+

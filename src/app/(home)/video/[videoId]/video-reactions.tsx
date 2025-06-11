@@ -4,6 +4,7 @@ import { ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
 import React, { useOptimistic, useTransition } from "react";
 
 // import { dislikeVideoAction, likeVideoAction } from "@/actions/video-actions";
+import { dislikeVideoAction, likeVideoAction } from "@/actions/video-actions";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/auth/auth-client";
@@ -70,11 +71,11 @@ const VideoReactions = ({ video }: VideoReactionsProps) => {
   const handleReaction = (type: "like" | "dislike") => {
     startTransition(async () => {
       updateOptimisticState(type);
-      // if (type === "like") {
-      //   await likeVideoAction(video.id);
-      // } else {
-      //   await dislikeVideoAction(video.id);
-      // }
+      if (type === "like") {
+        await likeVideoAction(video.id);
+      } else {
+        await dislikeVideoAction(video.id);
+      }
     });
   };
 
