@@ -7,7 +7,7 @@ import { UTApi } from "uploadthing/server";
 
 import { Prisma, PrismaClient, Video } from "@/generated";
 import { getUser } from "@/lib/auth/auth-session";
-import { inputSchema } from "@/lib/zod";
+import { inputSchema, videoIdSchema } from "@/lib/zod";
 import { VideoWithUser } from "@/types";
 
 
@@ -168,6 +168,7 @@ export async function updateVideoThumbnail(videoId: string, thumbnailUrl: string
 
 export async function getVideoById(videoId: string): Promise<VideoWithUser | null> {
 
+    // console.log("getVideoById");
     if (!videoId) {
         throw new Error("Video ID is missing");
     }
@@ -439,3 +440,69 @@ export async function dislikeVideoAction(videoId: string) {
     revalidatePath(`/video/${videoId}`);
 }
 
+/***************************/
+
+
+
+export const incrementVideoView = async (videoId: string) => {
+    const parsed = videoIdSchema.safeParse(videoId);
+
+    if (!parsed.success) {
+        console.error("Invalid videoId:", parsed.error.format());
+        throw new Error("Invalid video ID");
+    }
+
+    try {
+        const updatedVideo = await prisma.video.update({
+            where: {
+                id: parsed.data,
+            },
+            data: {
+                videoViews: {
+                    increment: 1,
+                },
+            },
+        });
+
+        revalidatePath("/videos"); // Or more specific: `/videos/${videoId}`
+        return updatedVideo;
+    } catch (error) {
+        console.error("Error incrementing video views:", error);
+        throw new Error("Failed to increment video views");
+    }
+};
+
+export const updateWatchHistory = async (
+    videoId: string,
+    watchedDuration: number,
+    progressPercentage: number,
+    completed: boolean
+) => {
+
+    const currentUser = await getUser();
+    if (!currentUser) {
+        throw new Error("Unauthorized");
+    }
+
+
+    await prisma.watchHistory.upsert({
+        where: {
+            userId_videoId: {
+                userId: currentUser.id, // handle auth context
+                videoId,
+            },
+        },
+        update: {
+            watchedDuration,
+            progressPercentage,
+            completed,
+        },
+        create: {
+            userId: currentUser.id,
+            videoId,
+            watchedDuration,
+            progressPercentage,
+            completed,
+        },
+    });
+};

@@ -3,18 +3,26 @@
 import { CopyIcon, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
-  TwitterShareButton,
   WhatsappShareButton,
   LinkedinShareButton,
+  TwitterShareButton,
+  EmailShareButton,
   RedditShareButton,
   TelegramShareButton,
-  EmailShareButton,
+  PocketShareButton,
+  ThreadsShareButton,
+  TumblrShareButton,
+  ViberShareButton,
   TwitterIcon,
   WhatsappIcon,
   LinkedinIcon,
   RedditIcon,
   TelegramIcon,
   EmailIcon,
+  PocketIcon,
+  ThreadsIcon,
+  TumblrIcon,
+  ViberIcon,
 } from "react-share";
 import { toast } from "sonner";
 
@@ -65,6 +73,26 @@ const socials = [
     Icon: EmailIcon,
     name: "Email",
   },
+  {
+    Component: PocketShareButton,
+    Icon: PocketIcon,
+    name: "Pocket",
+  },
+  {
+    Component: ThreadsShareButton,
+    Icon: ThreadsIcon,
+    name: "Threads",
+  },
+  {
+    Component: TumblrShareButton,
+    Icon: TumblrIcon,
+    name: "Tumblr",
+  },
+  {
+    Component: ViberShareButton,
+    Icon: ViberIcon,
+    name: "Viber",
+  },
 ];
 
 export const ShareButton = ({ url }: { url: string }) => {
@@ -91,8 +119,9 @@ export const ShareButton = ({ url }: { url: string }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon">
-          <Share2 className="h-4 w-4" />
+        <Button variant="secondary">
+          <span className="font-md">Share</span>
+          <Share2 className="h-4 w-4 ml-2" />
         </Button>
       </DialogTrigger>
 
@@ -101,7 +130,7 @@ export const ShareButton = ({ url }: { url: string }) => {
           <DialogTitle>Share this video</DialogTitle>
         </DialogHeader>
 
-        <div className="relative my-4 w-full px-4 overflow-hidden z-10">
+        <div className="relative my-4 w-full overflow-hidden z-10">
           {/* Left Gradient */}
           <div
             className={cn(
@@ -119,7 +148,7 @@ export const ShareButton = ({ url }: { url: string }) => {
               {socials.map(({ Component, Icon, name }, i) => (
                 <CarouselItem
                   key={i}
-                  className="mx-2  cursor-pointer flex-col items-center basis-auto pl-3"
+                  className="mx-2 cursor-pointer flex-col items-center basis-auto pl-3"
                 >
                   <Component url={url}>
                     <Icon size={48} round />
@@ -128,8 +157,6 @@ export const ShareButton = ({ url }: { url: string }) => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-
-          
           </Carousel>
 
           {/* Right Gradient */}

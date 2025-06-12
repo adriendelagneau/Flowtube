@@ -2,8 +2,7 @@
 
 // import confetti from "canvas-confetti";
 import { ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
-import React, { useOptimistic, useTransition } from "react";
-// import { dislikeVideoAction, likeVideoAction } from "@/actions/video-actions";
+import React, { useOptimistic, useRef, useTransition } from "react";
 import { toast } from "sonner";
 
 import { dislikeVideoAction, likeVideoAction } from "@/actions/video-actions";
@@ -21,6 +20,29 @@ const VideoReactions = ({ video }: VideoReactionsProps) => {
   const { data: session } = authClient.useSession();
   const user = session?.user;
 
+  const likeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // const fireConfetti = () => {
+  //   if (!likeButtonRef.current) return;
+
+  //   const rect = likeButtonRef.current.getBoundingClientRect();
+  //   const x = (rect.left + rect.width / 2) / window.innerWidth;
+  //   const y = (rect.top + rect.height / 1) / window.innerHeight;
+
+  //   confetti({
+  //     particleCount: 20,
+  //     spread: 100,
+  //     origin: { x, y },
+  //     scalar: 1.2, // Increase size (default is 1)
+  //     shapes: ["star"],
+  //     startVelocity: 15,
+  //     // angle: 10,
+  //     // decay: 0.2,
+  //     ticks: 70,
+  //   });
+  // };
+
+  // look at doing it in the frontend ?
   const viewerReaction = video.likes.some((l) => l.userId === user?.id)
     ? "like"
     : video.dislikes.some((d) => d.userId === user?.id)
@@ -72,8 +94,12 @@ const VideoReactions = ({ video }: VideoReactionsProps) => {
 
   const handleReaction = (type: "like" | "dislike") => {
     if (!user) return toast("Sign-in to react !");
+    // const wasAlreadyLiked = optimisticState.reaction === "like";
     startTransition(async () => {
       updateOptimisticState(type);
+      // if (type === "like" && !wasAlreadyLiked) {
+      //   fireConfetti();
+      // }
       if (type === "like") {
         await likeVideoAction(video.id);
       } else {
@@ -85,12 +111,14 @@ const VideoReactions = ({ video }: VideoReactionsProps) => {
   return (
     <div className="flex flex-none items-center">
       <Button
+        ref={likeButtonRef}
         variant="secondary"
         className="cursor-pointer gap-2 rounded-lg rounded-r-none pr-4"
         onClick={() => handleReaction("like")}
         // disabled={isPending}
       >
         <ThumbsUpIcon
+          strokeWidth={1.1}
           className={cn(
             "size-5",
             optimisticState.reaction === "like" && "fill-secondary-foreground"
@@ -106,6 +134,7 @@ const VideoReactions = ({ video }: VideoReactionsProps) => {
         // disabled={isPending}
       >
         <ThumbsDownIcon
+          strokeWidth={1.1}
           className={cn(
             "size-5",
             optimisticState.reaction !== "like" && "fill-secondary-foreground"

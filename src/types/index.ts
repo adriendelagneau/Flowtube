@@ -1,4 +1,4 @@
-import { Dislike, Like, User, Video } from "@/generated";
+import { CommentDislike, CommentLike, Dislike, Like, User, Video } from "@/generated";
 
 
 export interface VideoWithUser extends Video {
@@ -24,5 +24,31 @@ export type UploadFileResponse<TServerOutput> = {
   serverData: TServerOutput; // Custom data returned from the `onUploadComplete` callback
 };
 
+
+  export interface FullComment {
+    id: string;
+    userId: string;
+    videoId: string;
+    content: string;
+    createdAt: string | Date;
+    updatedAt: string | Date;
+    user: {
+      id: string;
+      email: string;
+      name: string | null;
+      emailVerified: boolean;
+      image: string | null;
+      createdAt: string | Date;
+      updatedAt: string | Date;
+    };
+    commentLikes: CommentLike[];
+    commentDislikes: CommentDislike[];
+    replies: FullComment[]; // <-- recursive field for nested replies
+    _count: {
+      commentLikes: number;
+      commentDislikes: number;
+    };
+  }
+  
 
 

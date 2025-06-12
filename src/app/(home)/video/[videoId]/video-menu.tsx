@@ -1,11 +1,10 @@
 import {
+  HeartPlusIcon,
   ListPlusIcon,
-  MoreHorizontalIcon,
-  ShareIcon,
   Trash2Icon,
 } from "lucide-react";
 import React, { useState } from "react";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 
 import { Button } from "@/components/ui/button";
@@ -20,23 +19,24 @@ import {
 
 interface VideoMenuProps {
   videoId: string;
-  variant?: "ghost" | "outline";
+  // variant?: "ghost" | "outline";
   onRemove?: () => void;
 }
 
 const VideoMenu = ({
-  videoId,
-  variant = "ghost",
+  // videoId,
+
   onRemove,
 }: VideoMenuProps) => {
-  const onShare = () => {
-    const fullUrl = `${process.env.VERCEL_URL || "http://localhost:3000"}/videos/${videoId}`;
-    navigator.clipboard.writeText(fullUrl);
-    toast("Successfull copied");
-  };
 
+  // const onShare = () => {
+  //   const fullUrl = `${process.env.VERCEL_URL || "http://localhost:3000"}/videos/${videoId}`;
+  //   navigator.clipboard.writeText(fullUrl);
+  //   toast("Successfull copied");
+  // };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [openPlaylistModal, setOpenPlaylistModal] = useState(false);
-  console.log(openPlaylistModal, variant);
 
   return (
     <>
@@ -47,15 +47,16 @@ const VideoMenu = ({
       /> */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon" className="cursor-pointer">
-            <MoreHorizontalIcon />
+          <Button variant="secondary" className="cursor-pointer">
+            <span>Save</span>
+            <HeartPlusIcon />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-          <DropdownMenuItem onClick={onShare}>
+          {/* <DropdownMenuItem onClick={onShare}>
             <ShareIcon className="mr-2 size-4" />
             Share
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem onClick={() => setOpenPlaylistModal(true)}>
             <ListPlusIcon className="mr-2 size-4" />
             Add to playlist

@@ -28,9 +28,9 @@ const VideoTopRow = ({ video }: VideoTopRowProps) => {
           <div className="-mb-2 flex gap-2 overflow-x-auto pb-2 sm:mb-0 sm:min-w-[calc(50%-6px)] sm:justify-end sm:overflow-visible sm:pb-0">
             <VideoReactions video={video} />
             <ShareButton
-              url={`${process.env.NEXT_PUBLIC_BASE_URL}/video/${video.id}`}
+              url={`${process.env.NEXT_PUBLIC_URLL}/video/${video.id}`}
             />
-            <VideoMenu videoId={video.id} variant="ghost" />
+            <VideoMenu videoId={video.id}  />
           </div>
         </div>
         <VideoDescription

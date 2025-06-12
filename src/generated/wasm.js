@@ -214,6 +214,61 @@ exports.Prisma.DislikeScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.WatchHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  videoId: 'videoId',
+  watchedAt: 'watchedAt',
+  watchedDuration: 'watchedDuration',
+  progressPercentage: 'progressPercentage',
+  completed: 'completed',
+  lastWatchedAt: 'lastWatchedAt'
+};
+
+exports.Prisma.CommentScalarFieldEnum = {
+  id: 'id',
+  parentId: 'parentId',
+  userId: 'userId',
+  videoId: 'videoId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommentLikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  commentId: 'commentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommentDislikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  commentId: 'commentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PlaylistScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId'
+};
+
+exports.Prisma.PlaylistVideoScalarFieldEnum = {
+  id: 'id',
+  playlistId: 'playlistId',
+  videoId: 'videoId',
+  position: 'position',
+  visibility: 'visibility',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -233,6 +288,12 @@ exports.VideoVisibility = exports.$Enums.VideoVisibility = {
   public: 'public'
 };
 
+exports.PlaylistVisibility = exports.$Enums.PlaylistVisibility = {
+  public: 'public',
+  private: 'private',
+  unlisted: 'unlisted'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -241,7 +302,13 @@ exports.Prisma.ModelName = {
   Category: 'Category',
   Video: 'Video',
   Like: 'Like',
-  Dislike: 'Dislike'
+  Dislike: 'Dislike',
+  WatchHistory: 'WatchHistory',
+  Comment: 'Comment',
+  CommentLike: 'CommentLike',
+  CommentDislike: 'CommentDislike',
+  Playlist: 'Playlist',
+  PlaylistVideo: 'PlaylistVideo'
 };
 
 /**

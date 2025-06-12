@@ -1,10 +1,10 @@
 import { headers } from "next/headers";
 import React from "react";
 
-// import { CommentSection } from "@/components/comment/comment-section";
 import { getVideoById } from "@/actions/video-actions";
 import { auth } from "@/lib/auth/auth";
 
+import { CommentSection } from "./comment/comment-section";
 import { VideoView } from "./video-view";
 
 // import { SuggestionSection } from "@/components/suggestion-section";
@@ -28,6 +28,7 @@ const Page = async ({ params }: PageProps) => {
   // const subscription = subscriptions.isSubscribed;
 
   const video = await getVideoById(videoId);
+
   if (!video) return null;
 
   // const res = await fetchVideos({
@@ -47,7 +48,7 @@ const Page = async ({ params }: PageProps) => {
                 hasMore={res.hasMore}
               /> */}
             </div>
-            {/* <CommentSection video={video} /> */}
+            <CommentSection video={video} />
           </div>
           <div className="hidden w-full shrink-1 rounded-xl xl:block xl:w-[380px]">
             {/* <SuggestionSection

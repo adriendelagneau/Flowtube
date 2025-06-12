@@ -1,7 +1,9 @@
+import { BellRingIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { ThemeToggleButton } from "@/components/buttons/theme-toggle-button";
+import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 // import { AuthButton } from "./auth-button";
@@ -39,11 +41,17 @@ export const HomeNavbar = async () => {
           {/** Studio button */}
           <StudioButton />
 
-          {/** notification */}
-          {/* <NotificationButton /> */}
 
           {/** toggle theme button */}
           <ThemeToggleButton />
+
+        
+          {/** notification */}
+          {/* <NotificationButton /> */}
+          <Button size={"icon"} variant={"ghost"} className="cursor-pointer relative">
+            <BellRingIcon />
+            <span className="h-2.5 w-2.5 rounded-full absolute top-1.5 dark:bg-500 right-1.5 bg-red-700"></span>
+          </Button>
 
           {/** auth button */}
           <AuthButton />
