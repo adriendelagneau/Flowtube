@@ -35,7 +35,7 @@ export const InfiniteScroll = ({
   const searchParams = useSearchParams();
   const { ref, inView } = useInView({ rootMargin: "30px" });
 
-  console.log(isLiked, "isLike from infinite scroll");
+  // console.log(isLiked, "isLike from infinite scroll");
 
   const query = searchParams.get("query") || "";
   const categorySlug = searchParams.get("category") || "";
@@ -43,7 +43,7 @@ export const InfiniteScroll = ({
     (searchParams.get("orderBy") as "newest" | "oldest" | "popular") || "newest";
 
   const shouldUseInitialData =
-    (query || "") === (initialQuery || "") && (isLiked || "") &&
+    (query || "") === (initialQuery || "") &&
     (categorySlug || "") === (initialCategorySlug || "") &&
     orderBy === initialOrderBy;
 

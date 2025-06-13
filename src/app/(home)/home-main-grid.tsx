@@ -22,6 +22,8 @@ export const HomeMainGrid = ({
   hasNextPage,
   refObserver,
 }: HomeMainGridProps) => {
+
+  console.log(isLoading,"isloading")
   return (
     <div className="no-scrollbar grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
       {videos.map((video) => (
