@@ -5,11 +5,9 @@ import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
-// import { fetchVideosPaginated } from "@/actions/video-actions";
+import { HomeMainGrid } from "@/app/(home)/home-main-grid";
+import { StudioMainList } from "@/app/(studio)/studio/studio-main-list";
 import { Video } from "@/generated";
-
-import HomeMainGrid from "./home-main-grid";
-import StudioMainList from "../(studio)/studio/studio-main-list";
 
 interface InfiniteScrollProps {
   initalVideos: Video[];
@@ -18,16 +16,20 @@ interface InfiniteScrollProps {
   initialCategorySlug?: string;
   initialOrderBy: "newest" | "oldest" | "popular";
   variant: "home-main" | "studio-main";
+  user?: boolean;
+  isPrivate?: boolean;
 }
 
-export default function InfiniteScroll({
+export const InfiniteScroll = ({
   initalVideos,
   hasMoreInitial,
   initialQuery,
   initialCategorySlug,
   initialOrderBy,
   variant,
-}: InfiniteScrollProps) {
+  user,
+  isPrivate,
+}: InfiniteScrollProps) => {
   const searchParams = useSearchParams();
   const { ref, inView } = useInView({ rootMargin: "30px" });
 
@@ -43,17 +45,25 @@ export default function InfiniteScroll({
     orderBy === initialOrderBy;
 
   const queryResult = useInfiniteQuery({
-    queryKey: ["videos", query, categorySlug, orderBy],
+    queryKey: ["videos", query, categorySlug, orderBy, user, isPrivate],
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await fetch(
-        `/api/videos/get-videos-paginated?page=${pageParam}&query=${query}&categorySlug=${categorySlug}&orderBy=${orderBy}&pageSize=9`
-      );
+      const params = new URLSearchParams({
+        page: pageParam.toString(),
+        pageSize: "9",
+        query,
+        categorySlug,
+        orderBy,
+      });
+
+      if (user !== undefined) params.append("user", String(user));
+      if (isPrivate !== undefined) params.append("private", String(isPrivate));
+
+      const res = await fetch(`/api/videos/get-videos-paginated?${params.toString()}`);
       if (!res.ok) {
         throw new Error("Failed to fetch videos");
       }
       return res.json();
     },
-
     getNextPageParam: (lastPage, allPages) =>
       lastPage.hasMore ? allPages.length + 1 : undefined,
     initialPageParam: 1,
@@ -108,4 +118,4 @@ export default function InfiniteScroll({
     default:
       return <p>Unknown variant: {variant}</p>;
   }
-}
+};

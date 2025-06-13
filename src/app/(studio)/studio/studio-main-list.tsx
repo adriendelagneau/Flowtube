@@ -20,13 +20,13 @@ interface StudioMainListProps {
   refObserver: (node?: Element | null) => void;
 }
 
-export default function StudioMainList({
+export const  StudioMainList = ({
   videos,
   isLoading,
   isFetchingNextPage,
   hasNextPage,
   refObserver,
-}: StudioMainListProps) {
+}: StudioMainListProps) => {
   const skeletonCount = 9;
 
   return (
@@ -100,4 +100,4 @@ export default function StudioMainList({
       </Table>
     </div>
   );
-}
+};

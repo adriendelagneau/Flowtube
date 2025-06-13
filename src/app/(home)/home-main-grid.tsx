@@ -15,13 +15,13 @@ interface HomeMainGridProps {
   refObserver: (node?: Element | null) => void; // ✅ fix here
 }
 
-export default function HomeMainGrid({
+export const HomeMainGrid = ({
   videos,
   isLoading,
   isFetchingNextPage,
   hasNextPage,
   refObserver,
-}: HomeMainGridProps) {
+}: HomeMainGridProps) => {
   return (
     <div className="no-scrollbar grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
       {videos.map((video) => (
@@ -58,4 +58,4 @@ export default function HomeMainGrid({
       )}
     </div>
   );
-}
+};

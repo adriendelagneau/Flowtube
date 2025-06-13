@@ -1,12 +1,13 @@
 import React from "react";
 
 import { fetchVideos } from "@/actions/video-actions";
-import InfiniteScroll from "@/app/(home)/infinite-scroll";
+import { InfiniteScroll } from "@/components/infinite-scroll";
 
 const StudioPage = async () => {
   const res = await fetchVideos({
     page: 1,
     pageSize: 9,
+    user: true,
   });
 
   return (
@@ -16,6 +17,7 @@ const StudioPage = async () => {
         hasMoreInitial={res.hasMore}
         variant="studio-main"
         initialOrderBy="newest"
+        user={true} 
       />
     </div>
   );

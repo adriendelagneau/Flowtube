@@ -268,66 +268,87 @@ export async function restoreThumbnail(formData: FormData): Promise<Video> {
 }
 
 export async function fetchVideos({
-    query,
-    page = 1,
-    pageSize = 9,
-    categorySlug,
-    orderBy = "newest",
+  query,
+  page = 1,
+  pageSize = 9,
+  categorySlug,
+  orderBy = "newest",
+  user = false,
+  isPrivate = false,
 }: {
-    query?: string;
-    page?: number;
-    pageSize?: number;
-    categorySlug?: string;
-    orderBy?: "newest" | "oldest" | "popular";
+  query?: string;
+  page?: number;
+  pageSize?: number;
+  categorySlug?: string;
+  orderBy?: "newest" | "oldest" | "popular";
+  user?: boolean;
+  isPrivate?: boolean;
 }) {
-    const skip = (page - 1) * pageSize;
+  const skip = (page - 1) * pageSize;
 
-    const whereClause: Prisma.VideoWhereInput = {
-        visibility: "public",
+  const whereClause: Prisma.VideoWhereInput = {};
+
+  if (user) {
+    const connectedUser = await getUser();
+    if (!connectedUser) {
+      throw new Error("User not authenticated");
+    }
+
+    whereClause.userId = connectedUser.id;
+
+    if (isPrivate === true) {
+      whereClause.visibility = "private";
+    } else if (isPrivate === false) {
+      whereClause.visibility = "public";
+    }
+    // else: show all (both public and private) for the user
+  } else {
+    // If not fetching for a user, only show public videos
+    whereClause.visibility = "public";
+  }
+
+  if (query) {
+    whereClause.title = {
+      contains: query,
+      mode: Prisma.QueryMode.insensitive,
     };
+  }
 
-    if (query) {
-        whereClause.title = {
-            contains: query,
-            mode: Prisma.QueryMode.insensitive,
-        };
-    }
-
-    if (categorySlug) {
-        console.log(categorySlug, "category slug");
-        whereClause.category = {
-            slug: categorySlug,
-        };
-    }
-
-    let orderClause: Prisma.VideoOrderByWithRelationInput = { createdAt: "desc" };
-    if (orderBy === "oldest") {
-        orderClause = { createdAt: "asc" };
-    } else if (orderBy === "popular") {
-        orderClause = { videoViews: "desc" };
-    }
-
-    const [videos, total] = await Promise.all([
-        prisma.video.findMany({
-            where: whereClause,
-            orderBy: orderClause,
-            skip,
-            take: pageSize,
-            include: {
-                user: true,
-                category: true,
-            },
-        }),
-        prisma.video.count({ where: whereClause }),
-    ]);
-
-    const hasMore = skip + videos.length < total;
-
-    return {
-        videos,
-        hasMore,
+  if (categorySlug) {
+    whereClause.category = {
+      slug: categorySlug,
     };
+  }
+
+  let orderClause: Prisma.VideoOrderByWithRelationInput = { createdAt: "desc" };
+  if (orderBy === "oldest") {
+    orderClause = { createdAt: "asc" };
+  } else if (orderBy === "popular") {
+    orderClause = { videoViews: "desc" };
+  }
+
+  const [videos, total] = await Promise.all([
+    prisma.video.findMany({
+      where: whereClause,
+      orderBy: orderClause,
+      skip,
+      take: pageSize,
+      include: {
+        user: true,
+        category: true,
+      },
+    }),
+    prisma.video.count({ where: whereClause }),
+  ]);
+
+  const hasMore = skip + videos.length < total;
+
+  return {
+    videos,
+    hasMore,
+  };
 }
+
 
 // export const fetchVideosPaginated = async ({
 //     pageParam = 1,

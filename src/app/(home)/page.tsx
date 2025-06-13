@@ -1,10 +1,8 @@
 import { getCategories } from "@/actions/category-actions";
 import { fetchVideos } from "@/actions/video-actions";
 import { FilterCarousel } from "@/components/filter-carousel";
-// import TestButton from "@/components/test-button";
-// import TestReceiver from "@/components/test-receiver";
+import { InfiniteScroll } from "@/components/infinite-scroll";
 
-import InfiniteScroll from "./infinite-scroll";
 
 const HomePage = async ({
   searchParams,
@@ -33,9 +31,6 @@ const HomePage = async ({
         initialCategorySlug={categorySlug}
         initialOrderBy="newest"
         />
-        {/* <TestButton />
-        <TestReceiver /> */}
-   
     </div>
   );
 };
