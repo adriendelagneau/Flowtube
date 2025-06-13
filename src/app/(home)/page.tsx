@@ -4,7 +4,7 @@ import { FilterCarousel } from "@/components/filter-carousel";
 // import TestButton from "@/components/test-button";
 // import TestReceiver from "@/components/test-receiver";
 
-import HomeMain from "./home-main";
+import InfiniteScroll from "./infinite-scroll";
 
 const HomePage = async ({
   searchParams,
@@ -25,9 +25,17 @@ const HomePage = async ({
   return (
     <div className="no-scrollbar overflow-y-auto">
       <FilterCarousel categories={categories} />
-      {/* <TestButton />
-      <TestReceiver /> */}
-      <HomeMain initalVideos={res.videos} hasMoreInitial={res.hasMore}/>
+      <InfiniteScroll
+        initalVideos={res.videos}
+        hasMoreInitial={res.hasMore}
+        variant="home-main"
+        initialQuery={query}
+        initialCategorySlug={categorySlug}
+        initialOrderBy="newest"
+        />
+        {/* <TestButton />
+        <TestReceiver /> */}
+   
     </div>
   );
 };

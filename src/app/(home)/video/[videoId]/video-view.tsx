@@ -12,6 +12,7 @@ import { VideoWithUser } from "@/types";
 import VideoBanner from "./video-banner";
 import VideoPlayer from "./video-player";
 import VideoTopRow from "./video-top-row";
+import { authClient } from "@/lib/auth/auth-client";
 // import VideoTopRow from "./video-top-row";
 
 interface VideoSectionProps {
@@ -22,6 +23,15 @@ interface VideoSectionProps {
 export const VideoView = ({ video }: VideoSectionProps) => {
   const hasCountedView = useRef(false);
   const lastReportedRef = useRef(0);
+
+  const { 
+        data: session, 
+        isPending, //loading state
+        error, //error object
+        refetch //refetch the session
+    } = authClient.useSession();
+    
+    console.log(session?.user.id);
 
   // Fires when video is played
   const handleVideoPlay = async () => {

@@ -1,12 +1,8 @@
-import {
-  HeartPlusIcon,
-  ListPlusIcon,
-  Trash2Icon,
-} from "lucide-react";
+import { HeartPlusIcon, ListPlusIcon, Trash2Icon } from "lucide-react";
 import React, { useState } from "react";
 // import { toast } from "sonner";
 
-
+import { PlaylistAddModal } from "@/components/playlist-add-modal";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,8 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// import { PlaylistAddModal } from "./playlist-add-modal";
-
 interface VideoMenuProps {
   videoId: string;
   // variant?: "ghost" | "outline";
@@ -24,27 +18,19 @@ interface VideoMenuProps {
 }
 
 const VideoMenu = ({
-  // videoId,
+  videoId,
 
   onRemove,
 }: VideoMenuProps) => {
-
-  // const onShare = () => {
-  //   const fullUrl = `${process.env.VERCEL_URL || "http://localhost:3000"}/videos/${videoId}`;
-  //   navigator.clipboard.writeText(fullUrl);
-  //   toast("Successfull copied");
-  // };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [openPlaylistModal, setOpenPlaylistModal] = useState(false);
 
   return (
     <>
-      {/* <PlaylistAddModal
+      <PlaylistAddModal
         videoId={videoId}
         open={openPlaylistModal}
         onOpenChange={setOpenPlaylistModal}
-      /> */}
+      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" className="cursor-pointer">
@@ -53,10 +39,6 @@ const VideoMenu = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-          {/* <DropdownMenuItem onClick={onShare}>
-            <ShareIcon className="mr-2 size-4" />
-            Share
-          </DropdownMenuItem> */}
           <DropdownMenuItem onClick={() => setOpenPlaylistModal(true)}>
             <ListPlusIcon className="mr-2 size-4" />
             Add to playlist

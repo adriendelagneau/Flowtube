@@ -19,14 +19,14 @@ const mux = new Mux({
 const prisma = new PrismaClient();
 
 export async function createVideo() {
-    console.log("create video");
+
     const user = await getUser();
     if (!user) {
         throw new Error("Unauthorized");
     }
 
     const userId = user.id;
-    console.log(user, "eser");
+
     try {
         const upload = await mux.video.uploads.create({
             new_asset_settings: {
@@ -329,27 +329,27 @@ export async function fetchVideos({
     };
 }
 
-export const fetchVideosPaginated = async ({
-    pageParam = 1,
-    query = "",
-    categorySlug = "",
-    orderBy = "newest",
-    pageSize = 9,
-}: {
-    pageParam?: number;
-    query?: string;
-    categorySlug?: string;
-    orderBy?: "newest" | "oldest" | "popular";
-    pageSize?: number;
-}) => {
-    return await fetchVideos({
-        page: pageParam,
-        pageSize,
-        query,
-        categorySlug,
-        orderBy,
-    });
-};
+// export const fetchVideosPaginated = async ({
+//     pageParam = 1,
+//     query = "",
+//     categorySlug = "",
+//     orderBy = "newest",
+//     pageSize = 9,
+// }: {
+//     pageParam?: number;
+//     query?: string;
+//     categorySlug?: string;
+//     orderBy?: "newest" | "oldest" | "popular";
+//     pageSize?: number;
+// }) => {
+//     return await fetchVideos({
+//         page: pageParam,
+//         pageSize,
+//         query,
+//         categorySlug,
+//         orderBy,
+//     });
+// };
 
 export async function likeVideoAction(videoId: string) {
     const user = await getUser();
@@ -441,8 +441,6 @@ export async function dislikeVideoAction(videoId: string) {
 }
 
 /***************************/
-
-
 
 export const incrementVideoView = async (videoId: string) => {
     const parsed = videoIdSchema.safeParse(videoId);
