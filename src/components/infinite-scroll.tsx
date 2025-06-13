@@ -18,6 +18,7 @@ interface InfiniteScrollProps {
   variant: "home-main" | "studio-main";
   user?: boolean;
   isPrivate?: boolean;
+  isLiked?: boolean; // ✅ Add isLiked prop
 }
 
 export const InfiniteScroll = ({
@@ -29,24 +30,25 @@ export const InfiniteScroll = ({
   variant,
   user,
   isPrivate,
+  isLiked, // ✅ Destructure isLiked
 }: InfiniteScrollProps) => {
   const searchParams = useSearchParams();
   const { ref, inView } = useInView({ rootMargin: "30px" });
 
+  console.log(isLiked, "isLike from infinite scroll");
+
   const query = searchParams.get("query") || "";
   const categorySlug = searchParams.get("category") || "";
   const orderBy =
-    (searchParams.get("orderBy") as "newest" | "oldest" | "popular") ||
-    "newest";
+    (searchParams.get("orderBy") as "newest" | "oldest" | "popular") || "newest";
 
-const shouldUseInitialData =
-  (query || "") === (initialQuery || "") &&
-  (categorySlug || "") === (initialCategorySlug || "") &&
-  orderBy === initialOrderBy;
-
+  const shouldUseInitialData =
+    (query || "") === (initialQuery || "") && (isLiked || "") &&
+    (categorySlug || "") === (initialCategorySlug || "") &&
+    orderBy === initialOrderBy;
 
   const queryResult = useInfiniteQuery({
-    queryKey: ["videos", query, categorySlug, orderBy, user, isPrivate],
+    queryKey: ["videos", query, categorySlug, orderBy, user, isPrivate, isLiked], // ✅ include isLiked
     queryFn: async ({ pageParam = 1 }) => {
       const params = new URLSearchParams({
         page: pageParam.toString(),
@@ -58,6 +60,7 @@ const shouldUseInitialData =
 
       if (user !== undefined) params.set("user", String(user));
       if (isPrivate !== undefined) params.set("private", String(isPrivate));
+      if (isLiked !== undefined) params.set("liked", String(isLiked)); // ✅ add to query
 
       const res = await fetch(
         `/api/videos/get-videos-paginated?${params.toString()}`

@@ -5,6 +5,7 @@ import { fetchVideos } from "@/actions/video-actions";
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
 
+
   const page = parseInt(searchParams.get("page") || "1", 10);
   const pageSize = parseInt(searchParams.get("pageSize") || "9", 10);
   const query = searchParams.get("query") || undefined;
@@ -15,8 +16,9 @@ export async function GET(req: NextRequest) {
     | "popular"
     | undefined;
 
-  const user = searchParams.get("user") === "true";      // 👈 Get user-only filter
-  const isPrivate = searchParams.get("private") === "true"; // 👈 Get private visibility flag
+  const user = searchParams.get("user") === "true";    
+  const isPrivate = searchParams.get("private") === "true"; 
+  const isLiked = searchParams.get("liked") === "true"; 
 
   const result = await fetchVideos({
     page,
@@ -26,6 +28,7 @@ export async function GET(req: NextRequest) {
     orderBy,
     user,
     isPrivate,
+    isLiked
   });
 
   return Response.json(result);

@@ -22,7 +22,7 @@ const items = [
   },
   {
     title: "Liked videos",
-    url: "/feed/liked",
+    url: "/liked",
     icon: ThumbsUpIcon,
     auth: true,
   },
