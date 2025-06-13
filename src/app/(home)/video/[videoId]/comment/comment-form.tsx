@@ -24,6 +24,7 @@ interface CommentFormProps {
 const CommentForm = ({
   videoId,
   parentId,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onSuccess,
   onCancel,
   variant = "reply",
@@ -31,7 +32,6 @@ const CommentForm = ({
   const { data: session } = authClient.useSession();
   const user = session?.user;
 
-  console.log(onSuccess);
 
   const form = useForm<z.infer<typeof commentSchema>>({
     resolver: zodResolver(commentSchema),

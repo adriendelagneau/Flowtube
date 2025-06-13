@@ -6,13 +6,13 @@ import {
   incrementVideoView,
   updateWatchHistory,
 } from "@/actions/video-actions";
+// import { authClient } from "@/lib/auth/auth-client";
 import { cn } from "@/lib/utils";
 import { VideoWithUser } from "@/types";
 
 import VideoBanner from "./video-banner";
 import VideoPlayer from "./video-player";
 import VideoTopRow from "./video-top-row";
-import { authClient } from "@/lib/auth/auth-client";
 // import VideoTopRow from "./video-top-row";
 
 interface VideoSectionProps {
@@ -24,14 +24,14 @@ export const VideoView = ({ video }: VideoSectionProps) => {
   const hasCountedView = useRef(false);
   const lastReportedRef = useRef(0);
 
-  const { 
-        data: session, 
-        isPending, //loading state
-        error, //error object
-        refetch //refetch the session
-    } = authClient.useSession();
-    
-    console.log(session?.user.id);
+  // const {
+  //   data: session,
+  //   // isPending, //loading state
+  //   // error, //error object
+  //   // refetch, //refetch the session
+  // } = authClient.useSession();
+
+  // console.log(session?.user.id);
 
   // Fires when video is played
   const handleVideoPlay = async () => {
@@ -47,7 +47,9 @@ export const VideoView = ({ video }: VideoSectionProps) => {
   };
 
   // Fires periodically during video playback
-  const handleTimeUpdate = async (event: React.SyntheticEvent<HTMLVideoElement>) => {
+  const handleTimeUpdate = async (
+    event: React.SyntheticEvent<HTMLVideoElement>
+  ) => {
     const target = event.target as HTMLVideoElement;
     const currentTime = Math.floor(target.currentTime);
     const duration = Math.floor(target.duration);
@@ -92,7 +94,7 @@ export const VideoView = ({ video }: VideoSectionProps) => {
         />
       </div>
       <VideoBanner status={video.muxStatus || ""} />
-      <VideoTopRow video={video}  />
+      <VideoTopRow video={video} />
     </>
   );
 };

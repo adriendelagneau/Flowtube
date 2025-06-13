@@ -6,7 +6,7 @@ import { SignInModal } from "@/components/auth/log-in/sign-in-modal";
 import { RecaptchaProvider } from "@/components/providers/google-captcha-provider";
 import TanstackProvider from "@/components/providers/tanstackprovider";
 import { ThemeProvider } from "@/components/providers/themes-provider";
-import Socket from "@/components/Socket";
+// import Socket from "@/components/Socket";
 import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
@@ -44,7 +44,7 @@ export default function RootLayout({
             <Toaster />
             <SignInModal />
             <TanstackProvider>
-              <Socket />
+              {/* <Socket /> */}
               {children}
             </TanstackProvider>
           </RecaptchaProvider>

@@ -4,10 +4,11 @@
 
 import VideoCard from "@/components/cards/video-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Video } from "@/generated";
+// import { Video } from "@/generated";
+import { VideoWithUser } from "@/types";
 
 interface HomeMainGridProps {
-  videos: Video[];
+  videos: VideoWithUser[];
   isLoading: boolean;
   isFetchingNextPage: boolean;
   hasNextPage: boolean;

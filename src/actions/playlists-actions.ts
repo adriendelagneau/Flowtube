@@ -72,6 +72,7 @@ export async function getUserPlaylists() {
       }
     });
 
+    console.log(playlists);
     return playlists;
   } catch (err) {
     console.error("Error fetching user playlists:", err);
