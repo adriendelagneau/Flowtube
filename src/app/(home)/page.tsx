@@ -7,14 +7,13 @@ import { InfiniteScroll } from "@/components/infinite-scroll";
 const HomePage = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ query: string; categorySlug: string }>;
+  searchParams: Promise<{ categorySlug: string }>;
 }) => {
-  const { query, categorySlug } = await searchParams;
+  const { categorySlug } = await searchParams;
 
   const categories = await getCategories();
 
   const res = await fetchVideos({
-    query,
     page: 1,
     pageSize: 9,
     categorySlug,
@@ -27,7 +26,6 @@ const HomePage = async ({
         initalVideos={res.videos}
         hasMoreInitial={res.hasMore}
         variant="home-main"
-        initialQuery={query}
         initialCategorySlug={categorySlug}
         initialOrderBy="newest"
         />

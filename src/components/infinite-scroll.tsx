@@ -39,10 +39,11 @@ export const InfiniteScroll = ({
     (searchParams.get("orderBy") as "newest" | "oldest" | "popular") ||
     "newest";
 
-  const shouldUseInitialData =
-    query === initialQuery &&
-    categorySlug === initialCategorySlug &&
-    orderBy === initialOrderBy;
+const shouldUseInitialData =
+  (query || "") === (initialQuery || "") &&
+  (categorySlug || "") === (initialCategorySlug || "") &&
+  orderBy === initialOrderBy;
+
 
   const queryResult = useInfiniteQuery({
     queryKey: ["videos", query, categorySlug, orderBy, user, isPrivate],
@@ -55,10 +56,12 @@ export const InfiniteScroll = ({
         orderBy,
       });
 
-      if (user !== undefined) params.append("user", String(user));
-      if (isPrivate !== undefined) params.append("private", String(isPrivate));
+      if (user !== undefined) params.set("user", String(user));
+      if (isPrivate !== undefined) params.set("private", String(isPrivate));
 
-      const res = await fetch(`/api/videos/get-videos-paginated?${params.toString()}`);
+      const res = await fetch(
+        `/api/videos/get-videos-paginated?${params.toString()}`
+      );
       if (!res.ok) {
         throw new Error("Failed to fetch videos");
       }

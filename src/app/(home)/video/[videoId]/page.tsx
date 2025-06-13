@@ -1,8 +1,4 @@
-import { headers } from "next/headers";
-import React from "react";
-
 import { getVideoById } from "@/actions/video-actions";
-import { auth } from "@/lib/auth/auth";
 
 import { CommentSection } from "./comment/comment-section";
 import { VideoView } from "./video-view";
@@ -16,25 +12,9 @@ interface PageProps {
 const Page = async ({ params }: PageProps) => {
   const { videoId } = await params;
 
-  const session = await auth.api.getSession({
-    headers: await headers(), // you need to pass the headers object.
-  });
-
-  if (!session?.user?.id) return;
-
-  // const subscriptions = await getSubscriptionStatus(videoId, session.user.id);
-  // if (!subscriptions) return null;
-
-  // const subscription = subscriptions.isSubscribed;
-
   const video = await getVideoById(videoId);
 
   if (!video) return null;
-
-  // const res = await fetchVideos({
-  //   page: 1,
-  //   pageSize: 9,
-  // });
 
   return (
     <div className="w-full">

@@ -168,7 +168,6 @@ export async function updateVideoThumbnail(videoId: string, thumbnailUrl: string
 
 export async function getVideoById(videoId: string): Promise<VideoWithUser | null> {
 
-    // console.log("getVideoById");
     if (!videoId) {
         throw new Error("Video ID is missing");
     }
@@ -348,29 +347,6 @@ export async function fetchVideos({
     hasMore,
   };
 }
-
-
-// export const fetchVideosPaginated = async ({
-//     pageParam = 1,
-//     query = "",
-//     categorySlug = "",
-//     orderBy = "newest",
-//     pageSize = 9,
-// }: {
-//     pageParam?: number;
-//     query?: string;
-//     categorySlug?: string;
-//     orderBy?: "newest" | "oldest" | "popular";
-//     pageSize?: number;
-// }) => {
-//     return await fetchVideos({
-//         page: pageParam,
-//         pageSize,
-//         query,
-//         categorySlug,
-//         orderBy,
-//     });
-// };
 
 export async function likeVideoAction(videoId: string) {
     const user = await getUser();
