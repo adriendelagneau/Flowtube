@@ -268,6 +268,7 @@ export async function restoreThumbnail(formData: FormData): Promise<Video> {
 
 
 
+
 export async function fetchVideos({
   query,
   page = 1,
@@ -290,11 +291,14 @@ export async function fetchVideos({
   isHistory?: boolean;
 }) {
   const skip = (page - 1) * pageSize;
+
+  // Auth is only needed if filtering by user, likes, or history
   const currentUser = (user || isLiked || isHistory) ? await getUser() : null;
   if ((user || isLiked || isHistory) && !currentUser) {
     throw new Error("User not authenticated");
   }
 
+  // Setup order clause
   const orderClause: Prisma.VideoOrderByWithRelationInput =
     orderBy === "oldest"
       ? { createdAt: "asc" }
@@ -302,7 +306,7 @@ export async function fetchVideos({
       ? { videoViews: "desc" }
       : { createdAt: "desc" };
 
-  // Case 1: If isHistory, query via WatchHistory
+  // CASE 1 — Fetch from watch history
   if (isHistory) {
     const historyWhere: Prisma.WatchHistoryWhereInput = {
       userId: currentUser!.id,
@@ -313,11 +317,12 @@ export async function fetchVideos({
         ...(categorySlug && {
           category: { slug: categorySlug },
         }),
-        ...(user && { userId: currentUser!.id }),
         ...(isLiked && {
           likes: { some: { userId: currentUser!.id } },
         }),
-        visibility: user ? (isPrivate ? "private" : "public") : "public",
+        ...(user
+          ? {  visibility: isPrivate ? "private" : "public" }
+          : { visibility: "public" }),
       },
     };
 
@@ -336,9 +341,7 @@ export async function fetchVideos({
           },
         },
       }),
-      prisma.watchHistory.count({
-        where: historyWhere,
-      }),
+      prisma.watchHistory.count({ where: historyWhere }),
     ]);
 
     const videos = watchHistory.map((entry) => entry.video);
@@ -346,7 +349,7 @@ export async function fetchVideos({
     return { videos, hasMore };
   }
 
-  // Case 2: Normal Video query
+  // CASE 2 — Regular video fetch
   const videoWhere: Prisma.VideoWhereInput = {
     ...(query && {
       title: { contains: query, mode: Prisma.QueryMode.insensitive },
