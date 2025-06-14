@@ -267,6 +267,7 @@ export async function restoreThumbnail(formData: FormData): Promise<Video> {
 }
 
 
+
 export async function fetchVideos({
     query,
     page = 1,
@@ -275,7 +276,8 @@ export async function fetchVideos({
     orderBy = "newest",
     user = false,
     isPrivate = false,
-    isLiked, /////
+    isLiked = false,
+    isHistory = false,
 }: {
     query?: string;
     page?: number;
@@ -285,10 +287,10 @@ export async function fetchVideos({
     user?: boolean;
     isPrivate?: boolean;
     isLiked?: boolean;
+    isHistory?: boolean;
 }) {
     const skip = (page - 1) * pageSize;
 
-    // Step 1: Build WHERE clause
     const whereClause: Prisma.VideoWhereInput = {};
 
     if (user) {
@@ -313,12 +315,11 @@ export async function fetchVideos({
         };
     }
 
-    // Step 2: Build ORDER clause
     let orderClause: Prisma.VideoOrderByWithRelationInput = { createdAt: "desc" };
     if (orderBy === "oldest") orderClause = { createdAt: "asc" };
     if (orderBy === "popular") orderClause = { videoViews: "desc" };
 
-    // Step 3: Handle isLiked videos
+    // Step 1: isLiked filter
     if (isLiked) {
         const currentUser = await getUser();
         if (!currentUser) throw new Error("User not authenticated");
@@ -357,7 +358,74 @@ export async function fetchVideos({
         return { videos, hasMore };
     }
 
-    // Step 4: Default fetch
+    // Step 2: isHistory filter
+    if (isHistory) {
+        const currentUser = await getUser();
+        if (!currentUser) throw new Error("User not authenticated");
+
+        const [watchHistory, total] = await Promise.all([
+            prisma.watchHistory.findMany({
+                where: {
+                    userId: currentUser.id,
+                    ...(query && {
+                        video: {
+                            title: {
+                                contains: query,
+                                mode: Prisma.QueryMode.insensitive,
+                            },
+                        },
+                    }),
+                    ...(categorySlug && {
+                        video: {
+                            category: {
+                                slug: categorySlug,
+                            },
+                        },
+                    }),
+                },
+                orderBy: {
+                    lastWatchedAt: "desc",
+                },
+                skip,
+                take: pageSize,
+                include: {
+                    video: {
+                        include: {
+                            user: true,
+                            category: true,
+                        },
+                    },
+                },
+            }),
+
+            prisma.watchHistory.count({
+                where: {
+                    userId: currentUser.id,
+                    ...(query && {
+                        video: {
+                            title: {
+                                contains: query,
+                                mode: Prisma.QueryMode.insensitive,
+                            },
+                        },
+                    }),
+                    ...(categorySlug && {
+                        video: {
+                            category: {
+                                slug: categorySlug,
+                            },
+                        },
+                    }),
+                },
+            }),
+        ]);
+
+        const videos = watchHistory.map((entry) => entry.video);
+        const hasMore = skip + videos.length < total;
+        return { videos, hasMore };
+    }
+
+    // Step 3: Default video fetch
     const [videos, total] = await Promise.all([
         prisma.video.findMany({
             where: whereClause,
@@ -375,6 +443,7 @@ export async function fetchVideos({
     const hasMore = skip + videos.length < total;
     return { videos, hasMore };
 }
+
 
 
 export async function likeVideoAction(videoId: string) {

@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
   const user = searchParams.get("user") === "true";    
   const isPrivate = searchParams.get("private") === "true"; 
   const isLiked = searchParams.get("liked") === "true"; 
+  const isHistory = searchParams.get("isHistory") === "true";
 
   const result = await fetchVideos({
     page,
@@ -28,7 +29,8 @@ export async function GET(req: NextRequest) {
     orderBy,
     user,
     isPrivate,
-    isLiked
+    isLiked,
+    isHistory
   });
 
   return Response.json(result);

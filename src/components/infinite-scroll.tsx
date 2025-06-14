@@ -19,6 +19,7 @@ interface InfiniteScrollProps {
   user?: boolean;
   isPrivate?: boolean;
   isLiked?: boolean; // ✅ Add isLiked prop
+  isHistory?: boolean;
 }
 
 export const InfiniteScroll = ({
@@ -30,12 +31,13 @@ export const InfiniteScroll = ({
   variant,
   user,
   isPrivate,
-  isLiked, // ✅ Destructure isLiked
+  isLiked, 
+  isHistory
 }: InfiniteScrollProps) => {
   const searchParams = useSearchParams();
   const { ref, inView } = useInView({ rootMargin: "30px" });
 
-  // console.log(isLiked, "isLike from infinite scroll");
+  console.log(isLiked, "isLike from infinite scroll");
 
   const query = searchParams.get("query") || "";
   const categorySlug = searchParams.get("category") || "";
@@ -48,7 +50,7 @@ export const InfiniteScroll = ({
     orderBy === initialOrderBy;
 
   const queryResult = useInfiniteQuery({
-    queryKey: ["videos", query, categorySlug, orderBy, user, isPrivate, isLiked], // ✅ include isLiked
+    queryKey: ["videos", query, categorySlug, orderBy, user, isPrivate, isLiked, isHistory], // ✅ include isLiked
     queryFn: async ({ pageParam = 1 }) => {
       const params = new URLSearchParams({
         page: pageParam.toString(),
@@ -61,6 +63,7 @@ export const InfiniteScroll = ({
       if (user !== undefined) params.set("user", String(user));
       if (isPrivate !== undefined) params.set("private", String(isPrivate));
       if (isLiked !== undefined) params.set("liked", String(isLiked)); // ✅ add to query
+      if (isHistory !== undefined) params.set("isHistory", String(isHistory));
 
       const res = await fetch(
         `/api/videos/get-videos-paginated?${params.toString()}`

@@ -16,7 +16,7 @@ import {
 const items = [
   {
     title: "History",
-    url: "/playlists/history",
+    url: "/history",
     icon: HistoryIcon,
     auth: true,
   },
