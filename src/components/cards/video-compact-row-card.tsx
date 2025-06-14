@@ -52,7 +52,9 @@ const VideoCompactRawCard = ({
             href={`/user/${video.user.id}`}
             className="flex items-center gap-2"
           >
-            <p className="text-muted-foreground capitalize text-xs pt-1">{video.user.name}</p>
+            <p className="text-muted-foreground pt-1 text-xs capitalize">
+              {video.user.name}
+            </p>
           </Link>
 
           <p className="text-muted-foreground text-xs">

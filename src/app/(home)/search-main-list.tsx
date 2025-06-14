@@ -3,6 +3,7 @@ import React from "react";
 // import VideoCard from "@/components/cards/video-card";
 import VideoCompactRawCard from "@/components/cards/video-compact-row-card";
 // import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { VideoWithUser } from "@/types";
 
 interface SearchMainListProps {
@@ -16,7 +17,7 @@ interface SearchMainListProps {
 const SearchMainList = ({
   videos,
   isLoading,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   isFetchingNextPage,
   hasNextPage,
   refObserver,
@@ -27,26 +28,28 @@ const SearchMainList = ({
         <VideoCompactRawCard video={video} key={video.id} />
       ))}
 
-      {/* {(isLoading || (isFetchingNextPage && hasNextPage)) &&
+      {(isLoading || (isFetchingNextPage && hasNextPage)) &&
         Array.from({ length: 9 }).map((_, idx) => (
-          <div
-            key={`skeleton-${idx}`}
-            className="overflow-hidden rounded-sm pb-2"
-          >
-            <Skeleton className="aspect-video w-full rounded-sm" />
-            <div className="mt-3 flex items-start justify-between px-1">
-              <div className="flex min-w-0 flex-1 gap-3">
-                <Skeleton className="h-7 w-7 rounded-full" />
-                <div className="flex w-full flex-col gap-2">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/2" />
-                  <Skeleton className="h-3 w-2/3" />
-                </div>
-              </div>
-              <Skeleton className="h-8 w-8 rounded-full" />
+          <div className="group mt-2 flex min-w-0 gap-2" key={`${idx}`}>
+            {/* Thumbnail */}
+            <div className="h-[94px] w-[168px] overflow-hidden rounded-md">
+              <Skeleton className="h-full w-full" />
             </div>
+
+            {/* Info */}
+            <div className="w-[420px] min-w-0 flex-1 space-y-2">
+              {/* Title */}
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-3 w-1/3" />
+              <Skeleton className="h-3 w-1/2" />
+              {/* New Badge */}
+              <Skeleton className="h-5 w-12 rounded-md" />
+            </div>
+
+            {/* Menu Button */}
+            <Skeleton className="h-8 w-8 rounded-md" />
           </div>
-        ))} */}
+        ))}
 
       {hasNextPage && <div className="col-span-full" ref={refObserver} />}
 
