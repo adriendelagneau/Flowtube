@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
 import { HomeMainGrid } from "@/app/(home)/home-main-grid";
+import SearchMainList from "@/app/(home)/search-main-list";
 import { StudioMainList } from "@/app/(studio)/studio/studio-main-list";
 import { Video } from "@/generated";
 
@@ -15,7 +16,7 @@ interface InfiniteScrollProps {
   initialQuery?: string;
   initialCategorySlug?: string;
   initialOrderBy: "newest" | "oldest" | "popular";
-  variant: "home-main" | "studio-main";
+  variant: "home-main" | "studio-main" | "search-main";
   user?: boolean;
   isPrivate?: boolean;
   isLiked?: boolean; // ✅ Add isLiked prop
@@ -31,8 +32,8 @@ export const InfiniteScroll = ({
   variant,
   user,
   isPrivate,
-  isLiked, 
-  isHistory
+  isLiked,
+  isHistory,
 }: InfiniteScrollProps) => {
   const searchParams = useSearchParams();
   const { ref, inView } = useInView({ rootMargin: "30px" });
@@ -42,7 +43,8 @@ export const InfiniteScroll = ({
   const query = searchParams.get("query") || "";
   const categorySlug = searchParams.get("category") || "";
   const orderBy =
-    (searchParams.get("orderBy") as "newest" | "oldest" | "popular") || "newest";
+    (searchParams.get("orderBy") as "newest" | "oldest" | "popular") ||
+    "newest";
 
   const shouldUseInitialData =
     (query || "") === (initialQuery || "") &&
@@ -50,7 +52,16 @@ export const InfiniteScroll = ({
     orderBy === initialOrderBy;
 
   const queryResult = useInfiniteQuery({
-    queryKey: ["videos", query, categorySlug, orderBy, user, isPrivate, isLiked, isHistory], // ✅ include isLiked
+    queryKey: [
+      "videos",
+      query,
+      categorySlug,
+      orderBy,
+      user,
+      isPrivate,
+      isLiked,
+      isHistory,
+    ], // ✅ include isLiked
     queryFn: async ({ pageParam = 1 }) => {
       const params = new URLSearchParams({
         page: pageParam.toString(),
@@ -116,6 +127,17 @@ export const InfiniteScroll = ({
     case "studio-main":
       return (
         <StudioMainList
+          videos={videos}
+          isLoading={isLoading}
+          isFetchingNextPage={isFetchingNextPage}
+          hasNextPage={hasNextPage ?? false}
+          refObserver={ref}
+        />
+      );
+
+    case "search-main":
+      return (
+        <SearchMainList
           videos={videos}
           isLoading={isLoading}
           isFetchingNextPage={isFetchingNextPage}

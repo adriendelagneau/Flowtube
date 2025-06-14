@@ -1,9 +1,8 @@
 import { getVideoById } from "@/actions/video-actions";
+import SuggestionSection from "@/components/suggestion-section";
 
 import { CommentSection } from "./comment/comment-section";
 import { VideoView } from "./video-view";
-
-// import { SuggestionSection } from "@/components/suggestion-section";
 
 interface PageProps {
   params: Promise<{ videoId: string }>;
@@ -23,18 +22,12 @@ const Page = async ({ params }: PageProps) => {
           <div className="flex-1">
             <VideoView video={video} />
             <div className="mt-4 block rounded-xl xl:hidden">
-              {/* <SuggestionSection
-                initialVideos={res.videos}
-                hasMore={res.hasMore}
-              /> */}
+              <SuggestionSection />
             </div>
             <CommentSection video={video} />
           </div>
-          <div className="hidden w-full shrink-1 rounded-xl xl:block xl:w-[380px]">
-            {/* <SuggestionSection
-              initialVideos={res.videos}
-              hasMore={res.hasMore}
-            /> */}
+          <div className="hidden w-full shrink-1 rounded-xl xl:block xl:w-[420px]">
+            <SuggestionSection />
           </div>
         </div>
       </div>

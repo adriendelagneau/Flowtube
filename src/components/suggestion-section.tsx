@@ -1,28 +1,22 @@
-import React from "react";
-
 import { fetchVideos } from "@/actions/video-actions";
 import { InfiniteScroll } from "@/components/infinite-scroll";
 
-const LikedPage = async () => {
+const SuggestionSection = async () => {
   const res = await fetchVideos({
     page: 1,
     pageSize: 9,
-    isLiked: true,
   });
 
-  
-
   return (
-    <div className="flex flex-col gap-y-6 pt-2.5">
+    <div className="no-scrollbar overflow-y-auto">
       <InfiniteScroll
         initalVideos={res.videos}
         hasMoreInitial={res.hasMore}
         variant="search-main"
         initialOrderBy="newest"
-        isLiked={true}
       />
     </div>
   );
 };
 
-export default LikedPage;
+export default SuggestionSection;
