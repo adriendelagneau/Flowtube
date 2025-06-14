@@ -7,7 +7,6 @@ const LikedPage = async () => {
   const res = await fetchVideos({
     page: 1,
     pageSize: 9,
-    user: true,
     isLiked: true,
   });
 
@@ -20,7 +19,6 @@ const LikedPage = async () => {
         hasMoreInitial={res.hasMore}
         variant="studio-main"
         initialOrderBy="newest"
-        user={true}
         isLiked={true}
       />
     </div>
