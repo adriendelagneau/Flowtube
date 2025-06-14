@@ -2,7 +2,7 @@ import React from "react";
 
 // import VideoCard from "@/components/cards/video-card";
 import VideoCompactRawCard from "@/components/cards/video-compact-row-card";
-import { Skeleton } from "@/components/ui/skeleton";
+// import { Skeleton } from "@/components/ui/skeleton";
 import { VideoWithUser } from "@/types";
 
 interface SearchMainListProps {
@@ -16,6 +16,7 @@ interface SearchMainListProps {
 const SearchMainList = ({
   videos,
   isLoading,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isFetchingNextPage,
   hasNextPage,
   refObserver,
