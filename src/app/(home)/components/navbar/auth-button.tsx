@@ -1,6 +1,7 @@
 "use client";
 
 import { UserIcon } from "lucide-react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -31,7 +32,7 @@ export const AuthButton = () => {
           className="cursor-pointer"
           onClick={() => toggle()}
         >
-          {/* <Image src="/user-sm.png" width={35} height={35} alt="user" /> */}
+          <Image src="/user-sm.png" width={35} height={35} alt="user" />
           <UserIcon />
         </Button>
       )}
