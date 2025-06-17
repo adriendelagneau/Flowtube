@@ -8,6 +8,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id    String  @id @default(uuid())
+  email String  @unique
+  name  String?
+
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+  channel       Channel[]
+
+  @@map("user")
+}
+
 model Session {
   id        String   @id @default(uuid())
   expiresAt DateTime
@@ -53,40 +69,15 @@ model Verification {
   @@map("verification")
 }
 
-model Category {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  slug        String   @unique
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("category")
-}
-
-model User {
-  id    String  @id @default(uuid())
-  email String  @unique
-  name  String?
-
-  emailVerified Boolean
-  img           String    @default("https://example.com/default-avatar.png")
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
-  channels      Channel[]
-
-  @@map("user")
-}
-
 model Channel {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  slug        String   @unique
+  id          String  @id @default(uuid())
+  name        String  @unique
+  slug        String  @unique
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  image       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

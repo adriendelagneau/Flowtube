@@ -11,16 +11,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User } from "@/lib/generated/prisma";
+import { authClient } from "@/lib/auth/auth-client";
+
 
 import { LogoutButton } from "./logout-button";
 
-export const UserButton = ({ user }: { user: User }) => {
+export const UserButton = () => {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center">
-        <Avatar className="h-10 w-10 cursor-pointer">
-          <AvatarImage src={user.img} alt="User Avatar" className="size-8" />
+      <DropdownMenuTrigger className="flex items-center justify-center h-10 w-10 cursor-pointer">
+        <Avatar className="">
+          <AvatarImage src={user?.image || undefined} alt="User Avatar" className="h-7 w-7" />
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40" align="end">
