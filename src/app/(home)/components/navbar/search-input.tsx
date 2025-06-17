@@ -3,18 +3,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SearchIcon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import React from "react";
 
 import { Button } from "@/components/ui/button";
+import { Form, FormField, FormItem, FormControl } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormControl,
-} from "@/components/ui/form";
 
 // Zod schema for validation (optional but recommended)
 const formSchema = z.object({
@@ -75,10 +70,10 @@ export const SearchInput = () => {
               variant="ghost"
               size="sm"
               onClick={() => form.setValue("query", "")}
-              className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full h-7 w-7 cursor-pointer"
+              className="absolute top-1/2 right-2 h-7 w-7 -translate-y-1/2 cursor-pointer rounded-full"
               aria-label="Clear search"
             >
-              <XIcon  />
+              <XIcon />
             </Button>
           )}
         </div>
@@ -89,7 +84,7 @@ export const SearchInput = () => {
           size="icon"
           disabled={!form.watch("query")?.trim()}
           aria-label="Submit search"
-          className=" rounded-r-full  disabled:opacity-100 disabled:cursor-not-allowed cursor-pointer disabled:hover:text-inherit "
+          className="cursor-pointer rounded-r-full disabled:cursor-not-allowed disabled:opacity-100 disabled:hover:text-inherit"
         >
           <SearchIcon />
         </Button>

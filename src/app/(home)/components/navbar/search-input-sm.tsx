@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 // Define Zod schema for validation
 const formSchema = z.object({
@@ -53,7 +53,7 @@ export const SearchInputSm = () => {
 
       {/* Slide-down mobile search */}
       <div
-        className={`fixed top-0 left-0 z-50 h-16 w-full bg-background transition-transform duration-300 sm:hidden ${
+        className={`bg-background fixed top-0 left-0 z-50 h-16 w-full transition-transform duration-300 sm:hidden ${
           isSearchOpen ? "translate-y-0" : "-translate-y-full"
         }`}
       >
@@ -84,7 +84,7 @@ export const SearchInputSm = () => {
               size="icon"
               disabled={!form.watch("query")?.trim()}
               aria-label="Submit search"
-              className=" rounded-r-full  disabled:opacity-100 disabled:cursor-not-allowed cursor-pointer disabled:hover:text-inherit"
+              className="cursor-pointer rounded-r-full disabled:cursor-not-allowed disabled:opacity-100 disabled:hover:text-inherit"
             >
               <SearchIcon />
             </Button>

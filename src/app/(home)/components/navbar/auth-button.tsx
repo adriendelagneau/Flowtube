@@ -1,12 +1,13 @@
 "use client";
 
+import { UserIcon } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/lib/auth/auth-client";
 import { useAuthModal } from "@/lib/store/useAuthStore";
 
 import { UserButton } from "./user-button";
-import { UserIcon } from "lucide-react";
 
 // Inner logic component for session logic
 export const AuthButton = () => {
@@ -15,16 +16,14 @@ export const AuthButton = () => {
 
   const { toggle } = useAuthModal();
 
-
-
   return (
     <div className="">
       {isPending ? (
-        <div className="h-10 w-10 flex items-center justify-center">
+        <div className="flex h-10 w-10 items-center justify-center">
           <Skeleton className="h-7 w-7 rounded-full" />
         </div>
       ) : user ? (
-        <UserButton user={{ ...user, img: user.image ?? "" }}/>
+        <UserButton user={{ ...user, img: user.image ?? "" }} />
       ) : (
         <Button
           variant="ghost"

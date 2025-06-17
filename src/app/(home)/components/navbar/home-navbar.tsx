@@ -2,7 +2,6 @@ import { BellRingIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { ThemeToggleButton } from "./theme-toggle-button";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
@@ -11,14 +10,15 @@ import { AuthButton } from "./auth-button";
 import { SearchInput } from "./search-input";
 import { SearchInputSm } from "./search-input-sm";
 import { StudioButton } from "./studio-button";
+import { ThemeToggleButton } from "./theme-toggle-button";
 
 export const HomeNavbar = async () => {
   return (
     <div className="bg-background fixed top-0 left-0 z-50 flex h-16 w-full items-center px-2">
       <div className="flex w-full items-center gap-2 md:gap-4">
         {/** Menu & Logo */}
-        <div className="flex flex-shrink-0 items-center h-10">
-          <SidebarTrigger className="cursor-pointer w-10 h-10" />
+        <div className="flex h-10 flex-shrink-0 items-center">
+          <SidebarTrigger className="h-10 w-10 cursor-pointer" />
           <Link href={"/"}>
             <div className="flex items-center gap-1 p-4">
               <Image src="/logo3.png" alt="logo" width={28} height={28} />
@@ -41,16 +41,18 @@ export const HomeNavbar = async () => {
           {/** Studio button */}
           <StudioButton />
 
-
           {/** toggle theme button */}
           <ThemeToggleButton />
 
-        
           {/** notification */}
           {/* <NotificationButton /> */}
-          <Button size={"icon"} variant={"ghost"} className="cursor-pointer relative">
+          <Button
+            size={"icon"}
+            variant={"ghost"}
+            className="relative cursor-pointer"
+          >
             <BellRingIcon />
-            <span className="h-2.5 w-2.5 rounded-full absolute top-1.5 dark:bg-500 right-1.5 bg-red-700"></span>
+            <span className="dark:bg-500 absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-700"></span>
           </Button>
 
           {/** auth button */}
