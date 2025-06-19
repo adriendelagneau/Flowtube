@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-
 import "./globals.css";
 import { Toaster } from "sonner";
 
 import { SignInModal } from "@/components/auth/log-in/sign-in-modal";
 import { RecaptchaProvider } from "@/components/providers/google-captcha-provider";
+import { TanstackProvider } from "@/components/providers/tanstackprovider";
 import { ThemeProvider } from "@/components/providers/themes-provider";
 
 const geistSans = Geist({
@@ -42,7 +42,7 @@ export default function RootLayout({
           <RecaptchaProvider>
             <SignInModal />
             <Toaster />
-            {children}
+            <TanstackProvider>{children}</TanstackProvider>
           </RecaptchaProvider>
         </ThemeProvider>
       </body>

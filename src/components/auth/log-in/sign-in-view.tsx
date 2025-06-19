@@ -23,9 +23,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 // import { useAuthState } from "@/hooks/useAuthState";
-import { useAuthState } from "@/hooks/useAuthState"; 
+import { useAuthState } from "@/hooks/useAuthState";
 import { authClient } from "@/lib/auth/auth-client";
-
 
 import FormError from "../form-error";
 import SocialButton from "./social-button";
@@ -93,6 +92,7 @@ export const SignInView = () => {
         { provider },
         {
           onSuccess: async () => {
+            // await getOrCreateDefaultChannel();
             router.push("/");
             router.refresh();
           },
@@ -111,63 +111,62 @@ export const SignInView = () => {
   };
 
   return (
+    <Card className="mx-auto w-full max-w-md p-6">
+      <Form {...form}>
+        <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                {/* <FormLabel>Email</FormLabel> */}
+                <FormControl>
+                  <div className="relative">
+                    <MailIcon className="text-muted-foreground absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2" />
+                    <Input
+                      type="email"
+                      disabled={loading}
+                      placeholder="Adresse email"
+                      className="pl-12"
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <Card className="mx-auto w-full max-w-md p-6">
-        <Form {...form}>
-          <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  {/* <FormLabel>Email</FormLabel> */}
-                  <FormControl>
-                    <div className="relative">
-                      <MailIcon className="text-muted-foreground absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2" />
-                      <Input
-                        type="email"
-                        disabled={loading}
-                        placeholder="Adresse email"
-                        className="pl-12"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+          <FormError message={error} />
+
+          <Button disabled={loading} type="submit" className="w-full">
+            Envoyez un mail
+          </Button>
+
+          <div className="text-muted-foreground flex w-full items-center py-5 text-sm">
+            <div className="border-secondary-foreground flex-grow border-t" />
+            <span className="mx-2 text-lg">ou</span>
+            <div className="border-secondary-foreground flex-grow border-t" />
+          </div>
+
+          <div className="mt-4">
+            <SocialButton
+              provider="google"
+              icon={<FcGoogle size={"22"} />}
+              label="continuer avec Google"
+              onClick={() => handleSignInWithProvider("google")}
+              disabled={loading}
             />
-
-            <FormError message={error} />
-
-            <Button disabled={loading} type="submit" className="w-full">
-              Envoyez un mail
-            </Button>
-
-            <div className="text-muted-foreground flex w-full items-center py-5 text-sm">
-              <div className="border-secondary-foreground flex-grow border-t" />
-              <span className="mx-2 text-lg">ou</span>
-              <div className="border-secondary-foreground flex-grow border-t" />
-            </div>
-
-            <div className="mt-4">
-              <SocialButton
-                provider="google"
-                icon={<FcGoogle size={"22"} />}
-                label="continuer avec Google"
-                onClick={() => handleSignInWithProvider("google")}
-                disabled={loading}
-              />
-              <SocialButton
-                provider="github"
-                icon={<FaGithub size={"22"} />}
-                label="continuer avec GitHub"
-                onClick={() => handleSignInWithProvider("github")}
-                disabled={loading}
-              />
-            </div>
-          </form>
-        </Form>
-      </Card>
+            <SocialButton
+              provider="github"
+              icon={<FaGithub size={"22"} />}
+              label="continuer avec GitHub"
+              onClick={() => handleSignInWithProvider("github")}
+              disabled={loading}
+            />
+          </div>
+        </form>
+      </Form>
+    </Card>
   );
 };

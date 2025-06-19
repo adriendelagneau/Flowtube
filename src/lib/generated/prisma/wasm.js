@@ -177,6 +177,55 @@ exports.Prisma.ChannelScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.CategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.VideoScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  muxStatus: 'muxStatus',
+  muxAssetId: 'muxAssetId',
+  muxUploadId: 'muxUploadId',
+  muxPlaybackId: 'muxPlaybackId',
+  muxTrackId: 'muxTrackId',
+  muxTrackStatus: 'muxTrackStatus',
+  thumbnailUrl: 'thumbnailUrl',
+  thumbnailKey: 'thumbnailKey',
+  previewUrl: 'previewUrl',
+  previewKey: 'previewKey',
+  duration: 'duration',
+  visibility: 'visibility',
+  userId: 'userId',
+  channelId: 'channelId',
+  categoryId: 'categoryId',
+  videoViews: 'videoViews',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.LikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  videoId: 'videoId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DislikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  videoId: 'videoId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -191,14 +240,21 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.VideoVisibility = exports.$Enums.VideoVisibility = {
+  private: 'private',
+  public: 'public'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
-  Channel: 'Channel'
+  Channel: 'Channel',
+  Category: 'Category',
+  Video: 'Video',
+  Like: 'Like',
+  Dislike: 'Dislike'
 };
 
 /**
