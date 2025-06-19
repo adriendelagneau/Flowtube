@@ -6,18 +6,26 @@ import { slugify } from "@/lib/utils";
 
 const prisma = new PrismaClient();
 
-
-async function generateUniqueSlug(base: string, userId: string): Promise<string> {
-  let slug = slugify(base);
+// Generate a unique name based on a base value
+async function generateUniqueName(base: string): Promise<string> {
+  let name = base;
   let count = 1;
-
-  while (await prisma.channel.findFirst({ where: { slug, userId } })) {
-    slug = `${slugify(base)}-${count++}`;
+  while (await prisma.channel.findFirst({ where: { name } })) {
+    name = `${base}-${count++}`;
   }
-
-  return slug;
+  return name;
 }
 
+// Generate a unique slug scoped to the base
+function generateSlug(name: string): string {
+  return slugify(name);
+}
+
+async function generateUniqueNameAndSlug(base: string): Promise<{ name: string; slug: string }> {
+  const uniqueName = await generateUniqueName(base);
+  const slug = generateSlug(uniqueName);
+  return { name: uniqueName, slug };
+}
 
 export async function getOrCreateDefaultChannel() {
   const user = await getUser();
@@ -27,21 +35,21 @@ export async function getOrCreateDefaultChannel() {
     where: { userId: user.id },
     orderBy: { createdAt: "asc" },
   });
-
   if (existingChannel) return existingChannel;
 
-  const slug = await generateUniqueSlug("default", user.id);
+  const { name, slug } = await generateUniqueNameAndSlug("default");
 
   const newChannel = await prisma.channel.create({
     data: {
       userId: user.id,
-      name: "default",
+      name,
       slug,
     },
   });
 
   return newChannel;
 }
+
 
 export async function getUserChannels() {
    const user = await getUser();
