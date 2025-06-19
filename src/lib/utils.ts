@@ -15,3 +15,14 @@ export const formatDuration = (duration: number) => {
 export const snakeCaseToTitle = (str: string) => {
   return str.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 };
+
+export function slugify(text: string): string {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-");
+}
+
