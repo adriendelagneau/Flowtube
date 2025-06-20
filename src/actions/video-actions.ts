@@ -286,7 +286,54 @@ export async function updateVideoThumbnail(videoId: string, thumbnailUrl: string
 
 
 
+// export async function getChannelVideos(slug: string) {
+//   const user = await getUser();
+//   if (!user) throw new Error("Unauthorized");
 
-export async function fetchVideos() {
-    return "hello";
+//   const channel = await prisma.channel.findUnique({
+//     where: { slug },
+//     select: { id: true },
+//   });
+//   if (!channel) throw new Error("Channel not found");
+
+//   return prisma.video.findMany({
+//     where: { channelId: channel.id },
+//     orderBy: { createdAt: "desc" },
+//     select: {
+//       id: true,
+//       title: true,
+//       videoViews: true,
+//       duration: true,
+//       createdAt: true,
+//     },
+//   });
+// }
+
+export async function getChannelVideosPage(
+  slug: string,
+  page: number,
+  take = 10
+) {
+  const user = await getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const channel = await prisma.channel.findUnique({
+    where: { slug },
+    select: { id: true },
+  });
+  if (!channel) throw new Error("Channel not found");
+
+  const skip = (page - 1) * take;
+
+  const videos = await prisma.video.findMany({
+    where: { channelId: channel.id },
+    orderBy: { createdAt: "desc" },
+    skip,
+    take,
+
+  });
+
+  const nextPage = videos.length === take ? page + 1 : undefined;
+
+  return { data: videos, nextPage };
 }
