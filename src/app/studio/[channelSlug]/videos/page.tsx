@@ -2,8 +2,7 @@ import { notFound } from "next/navigation";
 import React from "react";
 
 import { getChannelVideosPage } from "@/actions/video-actions";
-
-import VideosClient from "./video-client";
+import { InfiniteScroll } from "@/components/infinite-scroll";
 
 interface PageProps {
   params: Promise<{ channelSlug: string }>;
@@ -11,8 +10,16 @@ interface PageProps {
 
 export default async function VideosPage({ params }: PageProps) {
   const channel = await params;
-  const videos = await getChannelVideosPage(channel.channelSlug, 1);
-  if (!videos) notFound();
+  const { data: initialData, hasMore: hasMoreInitial } =
+    await getChannelVideosPage(channel.channelSlug, 1);
+  if (!initialData) notFound();
 
-  return <VideosClient initialPage={videos} slug={channel.channelSlug} />;
+  return (
+    <InfiniteScroll
+      initalVideos={initialData}
+      hasMoreInitial={hasMoreInitial}
+      variant="studio-main"
+      initialOrderBy="newest"
+    />
+  );
 }

@@ -6273,6 +6273,7 @@ export namespace Prisma {
     slug: string | null
     description: string | null
     image: string | null
+    backgroundImage: string | null
     createdAt: Date | null
     updatedAt: Date | null
     userId: string | null
@@ -6284,6 +6285,7 @@ export namespace Prisma {
     slug: string | null
     description: string | null
     image: string | null
+    backgroundImage: string | null
     createdAt: Date | null
     updatedAt: Date | null
     userId: string | null
@@ -6295,6 +6297,7 @@ export namespace Prisma {
     slug: number
     description: number
     image: number
+    backgroundImage: number
     createdAt: number
     updatedAt: number
     userId: number
@@ -6308,6 +6311,7 @@ export namespace Prisma {
     slug?: true
     description?: true
     image?: true
+    backgroundImage?: true
     createdAt?: true
     updatedAt?: true
     userId?: true
@@ -6319,6 +6323,7 @@ export namespace Prisma {
     slug?: true
     description?: true
     image?: true
+    backgroundImage?: true
     createdAt?: true
     updatedAt?: true
     userId?: true
@@ -6330,6 +6335,7 @@ export namespace Prisma {
     slug?: true
     description?: true
     image?: true
+    backgroundImage?: true
     createdAt?: true
     updatedAt?: true
     userId?: true
@@ -6414,6 +6420,7 @@ export namespace Prisma {
     slug: string
     description: string | null
     image: string | null
+    backgroundImage: string
     createdAt: Date
     updatedAt: Date
     userId: string
@@ -6442,6 +6449,7 @@ export namespace Prisma {
     slug?: boolean
     description?: boolean
     image?: boolean
+    backgroundImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
@@ -6456,6 +6464,7 @@ export namespace Prisma {
     slug?: boolean
     description?: boolean
     image?: boolean
+    backgroundImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
@@ -6468,6 +6477,7 @@ export namespace Prisma {
     slug?: boolean
     description?: boolean
     image?: boolean
+    backgroundImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
@@ -6480,12 +6490,13 @@ export namespace Prisma {
     slug?: boolean
     description?: boolean
     image?: boolean
+    backgroundImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
   }
 
-  export type ChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "description" | "image" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["channel"]>
+  export type ChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "description" | "image" | "backgroundImage" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["channel"]>
   export type ChannelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     videos?: boolean | Channel$videosArgs<ExtArgs>
@@ -6510,6 +6521,7 @@ export namespace Prisma {
       slug: string
       description: string | null
       image: string | null
+      backgroundImage: string
       createdAt: Date
       updatedAt: Date
       userId: string
@@ -6943,6 +6955,7 @@ export namespace Prisma {
     readonly slug: FieldRef<"Channel", 'String'>
     readonly description: FieldRef<"Channel", 'String'>
     readonly image: FieldRef<"Channel", 'String'>
+    readonly backgroundImage: FieldRef<"Channel", 'String'>
     readonly createdAt: FieldRef<"Channel", 'DateTime'>
     readonly updatedAt: FieldRef<"Channel", 'DateTime'>
     readonly userId: FieldRef<"Channel", 'String'>
@@ -12066,6 +12079,7 @@ export namespace Prisma {
     slug: 'slug',
     description: 'description',
     image: 'image',
+    backgroundImage: 'backgroundImage',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     userId: 'userId'
@@ -12552,6 +12566,7 @@ export namespace Prisma {
     slug?: StringFilter<"Channel"> | string
     description?: StringNullableFilter<"Channel"> | string | null
     image?: StringNullableFilter<"Channel"> | string | null
+    backgroundImage?: StringFilter<"Channel"> | string
     createdAt?: DateTimeFilter<"Channel"> | Date | string
     updatedAt?: DateTimeFilter<"Channel"> | Date | string
     userId?: StringFilter<"Channel"> | string
@@ -12565,6 +12580,7 @@ export namespace Prisma {
     slug?: SortOrder
     description?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
+    backgroundImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -12581,6 +12597,7 @@ export namespace Prisma {
     NOT?: ChannelWhereInput | ChannelWhereInput[]
     description?: StringNullableFilter<"Channel"> | string | null
     image?: StringNullableFilter<"Channel"> | string | null
+    backgroundImage?: StringFilter<"Channel"> | string
     createdAt?: DateTimeFilter<"Channel"> | Date | string
     updatedAt?: DateTimeFilter<"Channel"> | Date | string
     userId?: StringFilter<"Channel"> | string
@@ -12594,6 +12611,7 @@ export namespace Prisma {
     slug?: SortOrder
     description?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
+    backgroundImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -12611,6 +12629,7 @@ export namespace Prisma {
     slug?: StringWithAggregatesFilter<"Channel"> | string
     description?: StringNullableWithAggregatesFilter<"Channel"> | string | null
     image?: StringNullableWithAggregatesFilter<"Channel"> | string | null
+    backgroundImage?: StringWithAggregatesFilter<"Channel"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Channel"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Channel"> | Date | string
     userId?: StringWithAggregatesFilter<"Channel"> | string
@@ -13286,6 +13305,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     image?: string | null
+    backgroundImage?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutChannelInput
@@ -13298,6 +13318,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     image?: string | null
+    backgroundImage?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -13310,6 +13331,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutChannelNestedInput
@@ -13322,6 +13344,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -13334,6 +13357,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     image?: string | null
+    backgroundImage?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -13345,6 +13369,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13355,6 +13380,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -14052,6 +14078,7 @@ export namespace Prisma {
     slug?: SortOrder
     description?: SortOrder
     image?: SortOrder
+    backgroundImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -14063,6 +14090,7 @@ export namespace Prisma {
     slug?: SortOrder
     description?: SortOrder
     image?: SortOrder
+    backgroundImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -14074,6 +14102,7 @@ export namespace Prisma {
     slug?: SortOrder
     description?: SortOrder
     image?: SortOrder
+    backgroundImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -15110,6 +15139,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     image?: string | null
+    backgroundImage?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     videos?: VideoCreateNestedManyWithoutChannelInput
@@ -15121,6 +15151,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     image?: string | null
+    backgroundImage?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     videos?: VideoUncheckedCreateNestedManyWithoutChannelInput
@@ -15274,6 +15305,7 @@ export namespace Prisma {
     slug?: StringFilter<"Channel"> | string
     description?: StringNullableFilter<"Channel"> | string | null
     image?: StringNullableFilter<"Channel"> | string | null
+    backgroundImage?: StringFilter<"Channel"> | string
     createdAt?: DateTimeFilter<"Channel"> | Date | string
     updatedAt?: DateTimeFilter<"Channel"> | Date | string
     userId?: StringFilter<"Channel"> | string
@@ -15734,6 +15766,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     image?: string | null
+    backgroundImage?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutChannelInput
@@ -15745,6 +15778,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     image?: string | null
+    backgroundImage?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -15843,6 +15877,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutChannelNestedInput
@@ -15854,6 +15889,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -16327,6 +16363,7 @@ export namespace Prisma {
     slug: string
     description?: string | null
     image?: string | null
+    backgroundImage?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -16426,6 +16463,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     videos?: VideoUpdateManyWithoutChannelNestedInput
@@ -16437,6 +16475,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     videos?: VideoUncheckedUpdateManyWithoutChannelNestedInput
@@ -16448,6 +16487,7 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    backgroundImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -172,6 +172,7 @@ exports.Prisma.ChannelScalarFieldEnum = {
   slug: 'slug',
   description: 'description',
   image: 'image',
+  backgroundImage: 'backgroundImage',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId'

@@ -313,7 +313,7 @@ export async function getChannelVideosPage(
   slug: string,
   page: number,
   take = 10
-) {
+): Promise<{ data: Video[]; hasMore: boolean }> {
   const user = await getUser();
   if (!user) throw new Error("Unauthorized");
 
@@ -330,10 +330,31 @@ export async function getChannelVideosPage(
     orderBy: { createdAt: "desc" },
     skip,
     take,
-
   });
 
-  const nextPage = videos.length === take ? page + 1 : undefined;
+  // Determine if there are more pages
+  const hasMore = videos.length === take;
+  return { data: videos, hasMore };
+}
 
-  return { data: videos, nextPage };
+export async function getVideosPage(
+  page: number,
+  take = 10
+): Promise<{ data: Video[]; hasMore: boolean }> {
+
+  const skip = (page - 1) * take;
+
+  const videos = await prisma.video.findMany({
+    orderBy: { createdAt: "desc" },
+    skip,
+    take,
+      include: {
+        channel: true,
+        category: true,
+      },
+  });
+
+  // Determine if there are more pages
+  const hasMore = videos.length === take;
+  return { data: videos, hasMore };
 }

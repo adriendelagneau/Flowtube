@@ -1,6 +1,4 @@
-import { Prisma } from "@/lib/generated/prisma";
-
-import {   } from  "@/lib/generated/prisma";
+import { Prisma, User, Video } from "@/lib/generated/prisma";
 
 export type VideoWithUser = Prisma.VideoGetPayload<{
   include: {
@@ -24,4 +22,7 @@ export type UploadFileResponse<TServerOutput> = {
   serverData: TServerOutput; // Custom data returned from the `onUploadComplete` callback
 };
 
+    export interface VideoWithChannelAndCount extends Video {
+    channel: User;
+  }
 
