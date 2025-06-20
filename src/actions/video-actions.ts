@@ -8,7 +8,7 @@ import { UTApi } from "uploadthing/server";
 
 import { getUser } from "@/lib/auth/auth-session";
 // import { Prisma } from "@/lib/generated/prisma";
-import { PrismaClient, Video } from "@/lib/generated/prisma";
+import { Prisma, PrismaClient, Video } from "@/lib/generated/prisma";
 import { inputSchema } from "@/lib/zod";
 import { VideoWithUser } from "@/types";
 
@@ -308,53 +308,102 @@ export async function updateVideoThumbnail(videoId: string, thumbnailUrl: string
 //     },
 //   });
 // }
+export type VideosPageResult = {
+  data: Video[];
+  hasMore: boolean;
+};
 
 export async function getChannelVideosPage(
   slug: string,
   page: number,
-  take = 10
-): Promise<{ data: Video[]; hasMore: boolean }> {
+  pageSize = 9
+): Promise<VideosPageResult> {
+  const skip = (page - 1) * pageSize;
+
   const user = await getUser();
   if (!user) throw new Error("Unauthorized");
 
-  const channel = await prisma.channel.findUnique({
-    where: { slug },
-    select: { id: true },
-  });
-  if (!channel) throw new Error("Channel not found");
-
-  const skip = (page - 1) * take;
-
   const videos = await prisma.video.findMany({
-    where: { channelId: channel.id },
+    where: {
+      channel: {
+        slug,
+        userId: user.id, // ensures only your channels’ videos
+      },
+    },
     orderBy: { createdAt: "desc" },
     skip,
-    take,
+    take: pageSize,
+    include: {
+      channel: true, // optionally include channel metadata
+    },
   });
 
-  // Determine if there are more pages
-  const hasMore = videos.length === take;
+  const hasMore = videos.length === pageSize;
   return { data: videos, hasMore };
 }
 
-export async function getVideosPage(
-  page: number,
-  take = 10
-): Promise<{ data: Video[]; hasMore: boolean }> {
 
-  const skip = (page - 1) * take;
 
-  const videos = await prisma.video.findMany({
-    orderBy: { createdAt: "desc" },
-    skip,
-    take,
+
+
+
+export async function fetchVideos({
+  query,
+  page = 1,
+  pageSize = 9,
+  categorySlug,
+  orderBy = "newest",
+  user = false,
+}: {
+  query?: string;
+  page?: number;
+  pageSize?: number;
+  categorySlug?: string;
+  orderBy?: "newest" | "oldest" | "popular";
+  user?: boolean;
+}) {
+  const skip = (page - 1) * pageSize;
+
+  // Auth is only needed if filtering by user, likes, or history
+  const currentUser =  await getUser();
+  if (user && !currentUser) {
+    throw new Error("User not authenticated");
+  }
+
+  // Setup order clause
+  const orderClause: Prisma.VideoOrderByWithRelationInput =
+    orderBy === "oldest"
+      ? { createdAt: "asc" }
+      : orderBy === "popular"
+      ? { videoViews: "desc" }
+      : { createdAt: "desc" };
+
+
+
+  const videoWhere: Prisma.VideoWhereInput = {
+    ...(query && {
+      title: { contains: query, mode: Prisma.QueryMode.insensitive },
+    }),
+    ...(categorySlug && {
+      category: { slug: categorySlug },
+    }),
+    ...(!user && { visibility: "public" }),
+  };
+
+  const [videos, total] = await Promise.all([
+    prisma.video.findMany({
+      where: videoWhere,
+      orderBy: orderClause,
+      skip,
+      take: pageSize,
       include: {
         channel: true,
         category: true,
       },
-  });
+    }),
+    prisma.video.count({ where: videoWhere }),
+  ]);
 
-  // Determine if there are more pages
-  const hasMore = videos.length === take;
-  return { data: videos, hasMore };
+  const hasMore = skip + videos.length < total;
+  return { videos, hasMore };
 }
