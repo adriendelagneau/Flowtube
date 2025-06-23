@@ -1,4 +1,4 @@
-// app/studio/[channelSlug]/page.tsx
+// app/studio/[channelId]/page.tsx
 
 import { redirect } from "next/navigation";
 
@@ -7,21 +7,21 @@ import { getUserChannels } from "@/actions/channel-actions";
 import ChannelSelector from "../channel-selector";
 
 interface PageProps {
-  params: Promise<{ channelSlug: string }>;
+  params: Promise<{ channelId: string }>;
 }
 
 const Page = async ({ params }: PageProps) => {
   const channels = await getUserChannels();
-  const { channelSlug } = await params;
+  const { channelId } = await params;
 
-  const current = channels.find((c) => c.slug === channelSlug);
+  const current = channels.find((c) => c.id === channelId);
 
   if (!current) redirect("/studio"); // ou 404
 
   return (
     <div>
-      <ChannelSelector channels={channels} currentChannelSlug={channelSlug} />
-      <h1 className="text-xl font-bold">Studio - Channel: {channelSlug}</h1>
+      <ChannelSelector channels={channels}  currentchannelId={channelId} />
+      <h1 className="text-xl font-bold">Studio - Channel: {current.name}</h1>
       {/* Contenu du channel */}
     </div>
   );

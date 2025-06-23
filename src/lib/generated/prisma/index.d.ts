@@ -6270,7 +6270,6 @@ export namespace Prisma {
   export type ChannelMinAggregateOutputType = {
     id: string | null
     name: string | null
-    slug: string | null
     description: string | null
     image: string | null
     backgroundImage: string | null
@@ -6282,7 +6281,6 @@ export namespace Prisma {
   export type ChannelMaxAggregateOutputType = {
     id: string | null
     name: string | null
-    slug: string | null
     description: string | null
     image: string | null
     backgroundImage: string | null
@@ -6294,7 +6292,6 @@ export namespace Prisma {
   export type ChannelCountAggregateOutputType = {
     id: number
     name: number
-    slug: number
     description: number
     image: number
     backgroundImage: number
@@ -6308,7 +6305,6 @@ export namespace Prisma {
   export type ChannelMinAggregateInputType = {
     id?: true
     name?: true
-    slug?: true
     description?: true
     image?: true
     backgroundImage?: true
@@ -6320,7 +6316,6 @@ export namespace Prisma {
   export type ChannelMaxAggregateInputType = {
     id?: true
     name?: true
-    slug?: true
     description?: true
     image?: true
     backgroundImage?: true
@@ -6332,7 +6327,6 @@ export namespace Prisma {
   export type ChannelCountAggregateInputType = {
     id?: true
     name?: true
-    slug?: true
     description?: true
     image?: true
     backgroundImage?: true
@@ -6417,7 +6411,6 @@ export namespace Prisma {
   export type ChannelGroupByOutputType = {
     id: string
     name: string
-    slug: string
     description: string | null
     image: string | null
     backgroundImage: string
@@ -6446,7 +6439,6 @@ export namespace Prisma {
   export type ChannelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    slug?: boolean
     description?: boolean
     image?: boolean
     backgroundImage?: boolean
@@ -6461,7 +6453,6 @@ export namespace Prisma {
   export type ChannelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    slug?: boolean
     description?: boolean
     image?: boolean
     backgroundImage?: boolean
@@ -6474,7 +6465,6 @@ export namespace Prisma {
   export type ChannelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    slug?: boolean
     description?: boolean
     image?: boolean
     backgroundImage?: boolean
@@ -6487,7 +6477,6 @@ export namespace Prisma {
   export type ChannelSelectScalar = {
     id?: boolean
     name?: boolean
-    slug?: boolean
     description?: boolean
     image?: boolean
     backgroundImage?: boolean
@@ -6496,7 +6485,7 @@ export namespace Prisma {
     userId?: boolean
   }
 
-  export type ChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "description" | "image" | "backgroundImage" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["channel"]>
+  export type ChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "image" | "backgroundImage" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["channel"]>
   export type ChannelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     videos?: boolean | Channel$videosArgs<ExtArgs>
@@ -6518,7 +6507,6 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
-      slug: string
       description: string | null
       image: string | null
       backgroundImage: string
@@ -6952,7 +6940,6 @@ export namespace Prisma {
   interface ChannelFieldRefs {
     readonly id: FieldRef<"Channel", 'String'>
     readonly name: FieldRef<"Channel", 'String'>
-    readonly slug: FieldRef<"Channel", 'String'>
     readonly description: FieldRef<"Channel", 'String'>
     readonly image: FieldRef<"Channel", 'String'>
     readonly backgroundImage: FieldRef<"Channel", 'String'>
@@ -12076,7 +12063,6 @@ export namespace Prisma {
   export const ChannelScalarFieldEnum: {
     id: 'id',
     name: 'name',
-    slug: 'slug',
     description: 'description',
     image: 'image',
     backgroundImage: 'backgroundImage',
@@ -12563,7 +12549,6 @@ export namespace Prisma {
     NOT?: ChannelWhereInput | ChannelWhereInput[]
     id?: StringFilter<"Channel"> | string
     name?: StringFilter<"Channel"> | string
-    slug?: StringFilter<"Channel"> | string
     description?: StringNullableFilter<"Channel"> | string | null
     image?: StringNullableFilter<"Channel"> | string | null
     backgroundImage?: StringFilter<"Channel"> | string
@@ -12577,7 +12562,6 @@ export namespace Prisma {
   export type ChannelOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    slug?: SortOrder
     description?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
     backgroundImage?: SortOrder
@@ -12591,7 +12575,6 @@ export namespace Prisma {
   export type ChannelWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     name?: string
-    slug?: string
     AND?: ChannelWhereInput | ChannelWhereInput[]
     OR?: ChannelWhereInput[]
     NOT?: ChannelWhereInput | ChannelWhereInput[]
@@ -12603,12 +12586,11 @@ export namespace Prisma {
     userId?: StringFilter<"Channel"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     videos?: VideoListRelationFilter
-  }, "id" | "name" | "slug">
+  }, "id" | "name">
 
   export type ChannelOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
-    slug?: SortOrder
     description?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
     backgroundImage?: SortOrder
@@ -12626,7 +12608,6 @@ export namespace Prisma {
     NOT?: ChannelScalarWhereWithAggregatesInput | ChannelScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Channel"> | string
     name?: StringWithAggregatesFilter<"Channel"> | string
-    slug?: StringWithAggregatesFilter<"Channel"> | string
     description?: StringNullableWithAggregatesFilter<"Channel"> | string | null
     image?: StringNullableWithAggregatesFilter<"Channel"> | string | null
     backgroundImage?: StringWithAggregatesFilter<"Channel"> | string
@@ -13302,7 +13283,6 @@ export namespace Prisma {
   export type ChannelCreateInput = {
     id?: string
     name: string
-    slug: string
     description?: string | null
     image?: string | null
     backgroundImage?: string
@@ -13315,7 +13295,6 @@ export namespace Prisma {
   export type ChannelUncheckedCreateInput = {
     id?: string
     name: string
-    slug: string
     description?: string | null
     image?: string | null
     backgroundImage?: string
@@ -13328,7 +13307,6 @@ export namespace Prisma {
   export type ChannelUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundImage?: StringFieldUpdateOperationsInput | string
@@ -13341,7 +13319,6 @@ export namespace Prisma {
   export type ChannelUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundImage?: StringFieldUpdateOperationsInput | string
@@ -13354,7 +13331,6 @@ export namespace Prisma {
   export type ChannelCreateManyInput = {
     id?: string
     name: string
-    slug: string
     description?: string | null
     image?: string | null
     backgroundImage?: string
@@ -13366,7 +13342,6 @@ export namespace Prisma {
   export type ChannelUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundImage?: StringFieldUpdateOperationsInput | string
@@ -13377,7 +13352,6 @@ export namespace Prisma {
   export type ChannelUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundImage?: StringFieldUpdateOperationsInput | string
@@ -14075,7 +14049,6 @@ export namespace Prisma {
   export type ChannelCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    slug?: SortOrder
     description?: SortOrder
     image?: SortOrder
     backgroundImage?: SortOrder
@@ -14087,7 +14060,6 @@ export namespace Prisma {
   export type ChannelMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    slug?: SortOrder
     description?: SortOrder
     image?: SortOrder
     backgroundImage?: SortOrder
@@ -14099,7 +14071,6 @@ export namespace Prisma {
   export type ChannelMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    slug?: SortOrder
     description?: SortOrder
     image?: SortOrder
     backgroundImage?: SortOrder
@@ -15136,7 +15107,6 @@ export namespace Prisma {
   export type ChannelCreateWithoutUserInput = {
     id?: string
     name: string
-    slug: string
     description?: string | null
     image?: string | null
     backgroundImage?: string
@@ -15148,7 +15118,6 @@ export namespace Prisma {
   export type ChannelUncheckedCreateWithoutUserInput = {
     id?: string
     name: string
-    slug: string
     description?: string | null
     image?: string | null
     backgroundImage?: string
@@ -15302,7 +15271,6 @@ export namespace Prisma {
     NOT?: ChannelScalarWhereInput | ChannelScalarWhereInput[]
     id?: StringFilter<"Channel"> | string
     name?: StringFilter<"Channel"> | string
-    slug?: StringFilter<"Channel"> | string
     description?: StringNullableFilter<"Channel"> | string | null
     image?: StringNullableFilter<"Channel"> | string | null
     backgroundImage?: StringFilter<"Channel"> | string
@@ -15763,7 +15731,6 @@ export namespace Prisma {
   export type ChannelCreateWithoutVideosInput = {
     id?: string
     name: string
-    slug: string
     description?: string | null
     image?: string | null
     backgroundImage?: string
@@ -15775,7 +15742,6 @@ export namespace Prisma {
   export type ChannelUncheckedCreateWithoutVideosInput = {
     id?: string
     name: string
-    slug: string
     description?: string | null
     image?: string | null
     backgroundImage?: string
@@ -15874,7 +15840,6 @@ export namespace Prisma {
   export type ChannelUpdateWithoutVideosInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundImage?: StringFieldUpdateOperationsInput | string
@@ -15886,7 +15851,6 @@ export namespace Prisma {
   export type ChannelUncheckedUpdateWithoutVideosInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundImage?: StringFieldUpdateOperationsInput | string
@@ -16360,7 +16324,6 @@ export namespace Prisma {
   export type ChannelCreateManyUserInput = {
     id?: string
     name: string
-    slug: string
     description?: string | null
     image?: string | null
     backgroundImage?: string
@@ -16460,7 +16423,6 @@ export namespace Prisma {
   export type ChannelUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundImage?: StringFieldUpdateOperationsInput | string
@@ -16472,7 +16434,6 @@ export namespace Prisma {
   export type ChannelUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundImage?: StringFieldUpdateOperationsInput | string
@@ -16484,7 +16445,6 @@ export namespace Prisma {
   export type ChannelUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundImage?: StringFieldUpdateOperationsInput | string

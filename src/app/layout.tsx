@@ -7,6 +7,7 @@ import { SignInModal } from "@/components/auth/log-in/sign-in-modal";
 import { RecaptchaProvider } from "@/components/providers/google-captcha-provider";
 import { TanstackProvider } from "@/components/providers/tanstackprovider";
 import { ThemeProvider } from "@/components/providers/themes-provider";
+import ScrollToTopOnRouteChange from "@/components/scroll-top";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,7 +43,9 @@ export default function RootLayout({
           <RecaptchaProvider>
             <SignInModal />
             <Toaster />
-            <TanstackProvider>{children}</TanstackProvider>
+            <TanstackProvider>
+              <ScrollToTopOnRouteChange />
+              {children}</TanstackProvider>
           </RecaptchaProvider>
         </ThemeProvider>
       </body>

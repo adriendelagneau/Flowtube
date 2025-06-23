@@ -23,13 +23,12 @@ import { Textarea } from "@/components/ui/textarea";
 
 interface Channel {
   id: string;
-  slug: string;
   name: string;
 }
 
 interface ChannelSelectorProps {
   channels: Channel[];
-  currentChannelSlug: string;
+  currentchannelId: string;
 }
 
 const schema = z.object({
@@ -41,10 +40,10 @@ type FormData = z.infer<typeof schema>;
 
 export default function ChannelSelector({
   channels,
-  currentChannelSlug,
+  currentchannelId,
 }: ChannelSelectorProps) {
   const router = useRouter();
-  const [selected, setSelected] = useState(currentChannelSlug);
+  const [selected, setSelected] = useState(currentchannelId);
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -53,15 +52,15 @@ export default function ChannelSelector({
     defaultValues: { name: "", description: "" },
   });
 
-  const handleChange = (channelSlug: string) => {
-    if (channelSlug === "new") {
+  const handleChange = (channelId: string) => {
+    if (channelId === "new") {
       setOpen(true);
       return;
     }
 
-    setSelected(channelSlug);
+    setSelected(channelId);
     startTransition(() => {
-      router.push(`/studio/${channelSlug}`);
+      router.push(`/studio/${channelId}`);
     });
   };
 
@@ -72,8 +71,7 @@ export default function ChannelSelector({
         toast.success("Channel created");
         setOpen(false);
         form.reset();
-        // Rediriger vers le slug créé, pas l’ID
-        router.push(`/studio/${newChannel.slug}`);
+        router.push(`/studio/${newChannel.id}`);
         router.refresh();
       } catch (error) {
         toast.error("Failed to create channel");
@@ -90,7 +88,7 @@ export default function ChannelSelector({
         </SelectTrigger>
         <SelectContent>
           {channels.map((channel) => (
-            <SelectItem key={channel.id} value={channel.slug}>
+            <SelectItem key={channel.id} value={channel.id}>
               {channel.name}
             </SelectItem>
           ))}

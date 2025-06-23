@@ -169,7 +169,6 @@ exports.Prisma.VerificationScalarFieldEnum = {
 exports.Prisma.ChannelScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  slug: 'slug',
   description: 'description',
   image: 'image',
   backgroundImage: 'backgroundImage',

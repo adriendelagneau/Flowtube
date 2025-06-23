@@ -1,7 +1,7 @@
 // app/api/videos/get-videos-paginated/route.ts
 import { NextRequest } from "next/server";
 
-import { fetchVideos } from "@/actions/video-actions";
+import { fetchChannelVideos } from "@/actions/video-actions";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
@@ -17,12 +17,13 @@ export async function GET(req: NextRequest) {
     | undefined;
 
 
-  const result = await fetchVideos({
+  const result = await fetchChannelVideos({
     page,
     pageSize,
     query,
     categorySlug,
     orderBy,
+    channelId: req.nextUrl.pathname.split("/")[2], // Extract channelId from the path
   });
 
   return Response.json(result);

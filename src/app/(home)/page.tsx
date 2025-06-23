@@ -12,7 +12,13 @@ const HomePage = async ({
   searchParams: Promise<{ categorySlug: string }>;
 }) => {
   const { videos: initialData, hasMore: hasMoreInitial } = await fetchVideos(
-    {}
+    {
+      page: 1,
+      pageSize: 9,
+      query: "",
+      categorySlug: (await searchParams).categorySlug || "",
+      orderBy: "newest",
+    }
   );
   if (!initialData) notFound();
 

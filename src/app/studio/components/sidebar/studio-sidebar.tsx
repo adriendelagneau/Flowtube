@@ -22,10 +22,10 @@ import { StudioSidebarHeader } from "./studio-sidebar-header";
 export const StudioSidebar = () => {
   const pathname = usePathname();
   const segments = pathname.split("/");
-  const channelSlug = segments[2]; // ex. "abc123"
+  const channelId = segments[2]; // ex. "abc123"
 
-  const isVideosPage = pathname === `/studio/${channelSlug}/videos`;
-  const isPlaylistsPage = pathname === `/studio/${channelSlug}/playlists`;
+  const isVideosPage = pathname === `/studio/${channelId}/videos`;
+  const isPlaylistsPage = pathname === `/studio/${channelId}/playlists`;
 
   return (
     <Sidebar className="z-40 pt-16" collapsible="icon">
@@ -48,7 +48,7 @@ export const StudioSidebar = () => {
             {/* Videos */}
             <SidebarMenuItem>
               <SidebarMenuButton isActive={isVideosPage} asChild>
-                <Link href={`/studio/${channelSlug}/videos`}>
+                <Link href={`/studio/${channelId}/videos`}>
                   <VideoIcon size={20} />
                   <span className="text-sm">Videos</span>
                 </Link>
@@ -58,7 +58,7 @@ export const StudioSidebar = () => {
             {/* Playlists */}
             <SidebarMenuItem>
               <SidebarMenuButton isActive={isPlaylistsPage} asChild>
-                <Link href={`/studio/${channelSlug}/playlists`}>
+                <Link href={`/studio/${channelId}/playlists`}>
                   <ListVideoIcon size={20} />
                   <span className="text-sm">Playlists</span>
                 </Link>

@@ -29,6 +29,8 @@ export const  StudioMainList = ({
 }: StudioMainListProps) => {
   const skeletonCount = 9;
 
+ 
+
   return (
     <div className="border-y">
       <Table>

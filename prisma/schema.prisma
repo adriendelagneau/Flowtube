@@ -74,7 +74,6 @@ model Verification {
 model Channel {
   id          String  @id @default(uuid())
   name        String  @unique
-  slug        String  @unique
   description String?
   image       String?
   backgroundImage String @default("/background.png")
