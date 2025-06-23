@@ -37,13 +37,12 @@ export async function getOrCreateDefaultChannel() {
   });
   if (existingChannel) return existingChannel;
 
-  const { name, slug } = await generateUniqueNameAndSlug("default");
+  const { name } = await generateUniqueNameAndSlug("default");
 
   const newChannel = await prisma.channel.create({
     data: {
       userId: user.id,
       name,
-      slug,
     },
   });
 
@@ -75,7 +74,6 @@ export async function createChannel(data: { name: string; description?: string }
     data: {
       name: data.name,
       description: data.description || "",
-      slug,
       user: {
         connect: { id: user.id },
       },
