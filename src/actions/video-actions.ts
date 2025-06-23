@@ -367,7 +367,6 @@ export async function fetchChannelVideos({
             channel: { id: channelId },  // this is correct
         }),
     };
-    console.log(channelId, "channel ID");
 
     const [videos, total] = await Promise.all([
         prisma.video.findMany({
@@ -380,7 +379,6 @@ export async function fetchChannelVideos({
         prisma.video.count({ where }),
     ]);
 
-    console.log(videos, "videos");
     return {
         videos,
         hasMore: skip + videos.length < total,

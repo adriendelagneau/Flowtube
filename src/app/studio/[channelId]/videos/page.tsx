@@ -2,7 +2,7 @@
 import { notFound } from "next/navigation";
 
 import { fetchChannelVideos } from "@/actions/video-actions";
-import { InfiniteScrollStudiMain } from "@/components/infinite-scroll-studio-main";
+import { InfiniteScrollStudioMain } from "@/components/infinite-scroll-studio-main";
 
 interface PageProps {
   params: Promise<{ channelId: string }>;
@@ -22,7 +22,7 @@ export default async function VideosPage({ params }: PageProps) {
   if (!initialVideos) notFound();
 
   return (
-    <InfiniteScrollStudiMain
+    <InfiniteScrollStudioMain
       channelId={channelId}
       initalVideos={initialVideos}
       hasMoreInitial={hasMoreInitial}

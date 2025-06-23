@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     query,
     categorySlug,
     orderBy,
-    channelId: req.nextUrl.pathname.split("/")[2], // Extract channelId from the path
+    channelId: req.nextUrl.pathname.split("/")[3], // Extract channelId from the path
   });
 
   return Response.json(result);

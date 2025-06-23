@@ -15,7 +15,7 @@ interface InfiniteScrollProps {
   channelId?: string; // optional, used for studio main
 }
 
-export const InfiniteScrollStudiMain = ({
+export const InfiniteScrollStudioMain = ({
   initalVideos,
   hasMoreInitial,
   initialOrderBy,
@@ -57,6 +57,7 @@ export const InfiniteScrollStudiMain = ({
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     queryResult;
+
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
