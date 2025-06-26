@@ -64,9 +64,9 @@ export async function createChannel(data: { name: string; description?: string }
   const user = await getUser();
   if (!user) throw new Error("Unauthorized");
 
-   const slug = slugify(data.name);
+   
 
-   console.log(slug, "slug");
+  
 
   // Optionnel : vérifier unicité du slug, ajouter un suffixe si besoin (voir note plus bas)
 

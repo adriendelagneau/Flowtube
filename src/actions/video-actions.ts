@@ -2,14 +2,14 @@
 
 
 import Mux from "@mux/mux-node";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { UTApi } from "uploadthing/server";
 
 
 import { getUser } from "@/lib/auth/auth-session";
 // import { Prisma } from "@/lib/generated/prisma";
-import { Prisma, PrismaClient, Video } from "@/lib/generated/prisma";
-import { inputSchema } from "@/lib/zod";
+import { NotificationType, NotifyLevel, Prisma, PrismaClient, Video } from "@/lib/generated/prisma";
+import { inputSchema, videoIdSchema } from "@/lib/zod";
 import { VideoWithUser } from "@/types";
 
 
@@ -57,6 +57,12 @@ export async function createVideo(channelId: string) {
                 channelId: channel.id,
             },
         });
+
+        await createNotificationsForNewVideo(
+            video.id,
+            video.channelId,
+            `${user.name || "Someone"} uploaded a new video: ${video.title}`
+        );
 
         return { video, url: upload.url };
     } catch (error) {
@@ -107,10 +113,19 @@ export async function createVideo(channelId: string) {
 // }
 
 
-export async function getVideoById(videoId: string): Promise<VideoWithUser | null> {
+export async function getVideoById(
+    videoId: string
+): Promise<VideoWithUser & { subscription: boolean; notifyLevel?: "ALL" | "PERSONALIZED" | "NONE" } | null> {
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+
     if (!videoId) {
         throw new Error("Video ID is missing");
     }
+
+    const currentUserId = user.id;
 
     try {
         const video = await prisma.video.findUnique({
@@ -118,7 +133,7 @@ export async function getVideoById(videoId: string): Promise<VideoWithUser | nul
             include: {
                 channel: {
                     include: {
-                        user: true, // This gives you the channel owner's info
+                        user: true,
                     },
                 },
                 likes: true,
@@ -131,7 +146,28 @@ export async function getVideoById(videoId: string): Promise<VideoWithUser | nul
             throw new Error("Video not found");
         }
 
-        return video;
+        let isSubscribed = false;
+        let notifyLevel: "ALL" | "PERSONALIZED" | "NONE" | undefined;
+
+        const subscription = await prisma.subscription.findUnique({
+            where: {
+                userId_channelId: {
+                    userId: currentUserId,
+                    channelId: video.channelId,
+                },
+            },
+        });
+
+        if (subscription) {
+            isSubscribed = true;
+            notifyLevel = subscription.notifyLevel;
+        }
+
+        return {
+            ...video,
+            subscription: isSubscribed,
+            notifyLevel,
+        };
     } catch (error) {
         console.error("Error fetching video:", error);
         throw new Error("Failed to fetch video");
@@ -294,15 +330,23 @@ export async function fetchVideos({
     pageSize = 9,
     categorySlug,
     orderBy = "newest",
+    liked = false, // ← NEW
 }: {
     query?: string;
     page?: number;
     pageSize?: number;
     categorySlug?: string;
     orderBy?: "newest" | "oldest" | "popular";
+    liked?: boolean; // ← NEW
 
 }): Promise<{ videos: Video[]; hasMore: boolean }> {
     const skip = (page - 1) * pageSize;
+
+    // verify user is authenticated
+    const user = await getUser();
+    if (!user && liked) {
+        throw new Error("Unauthorized");
+    }
 
 
     const orderClause: Prisma.VideoOrderByWithRelationInput =
@@ -315,7 +359,11 @@ export async function fetchVideos({
     const where: Prisma.VideoWhereInput = {
         ...(query && { title: { contains: query, mode: "insensitive" } }),
         ...(categorySlug && { category: { slug: categorySlug } }),
-
+        ...(liked && user && {
+            likes: {
+                some: { userId: user.id },
+            },
+        }),
 
     };
 
@@ -351,6 +399,23 @@ export async function fetchChannelVideos({
     orderBy?: "newest" | "oldest" | "popular";
     channelId?: string;
 }): Promise<{ videos: Video[]; hasMore: boolean }> {
+
+    // verify user is authenticated
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+    if (!channelId) {
+        throw new Error("Channel ID is required");
+    }
+    // user.id must be egal to channel.userId
+    const channel = await prisma.channel.findUnique({
+        where: { id: channelId, userId: user.id },
+    });
+    if (!channel) {
+        throw new Error("Channel not found or does not belong to the user");
+    }
+
     const skip = (page - 1) * pageSize;
 
     const orderClause: Prisma.VideoOrderByWithRelationInput =
@@ -364,8 +429,12 @@ export async function fetchChannelVideos({
         ...(query && { title: { contains: query, mode: "insensitive" } }),
         ...(categorySlug && { category: { slug: categorySlug } }),
         ...(channelId && {
-            channel: { id: channelId },  // this is correct
+            channel: { id: channelId },
         }),
+        ...(channelId && {
+            channel: { userId: user.id },
+        }),
+
     };
 
     const [videos, total] = await Promise.all([
@@ -383,4 +452,294 @@ export async function fetchChannelVideos({
         videos,
         hasMore: skip + videos.length < total,
     };
+}
+
+
+export async function likeVideoAction(videoId: string) {
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+
+    const userId = user.id;
+
+    const existingLike = await prisma.like.findUnique({
+        where: {
+            userId_videoId: {
+                userId,
+                videoId,
+            },
+        },
+    });
+
+    const existingDislike = await prisma.dislike.findUnique({
+        where: {
+            userId_videoId: {
+                userId,
+                videoId,
+            },
+        },
+    });
+
+    // Toggle like
+    if (existingLike) {
+        await prisma.like.delete({
+            where: { userId_videoId: { userId, videoId } },
+        });
+    } else {
+        if (existingDislike) {
+            await prisma.dislike.delete({
+                where: { userId_videoId: { userId, videoId } },
+            });
+        }
+        await prisma.like.create({
+            data: { userId, videoId },
+        });
+    }
+    revalidatePath(`/video/${videoId}`);
+}
+
+export async function dislikeVideoAction(videoId: string) {
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+
+    const userId = user.id;
+
+    const existingDislike = await prisma.dislike.findUnique({
+        where: {
+            userId_videoId: {
+                userId,
+                videoId,
+            },
+        },
+    });
+
+    const existingLike = await prisma.like.findUnique({
+        where: {
+            userId_videoId: {
+                userId,
+                videoId,
+            },
+        },
+    });
+
+    // Toggle dislike
+    if (existingDislike) {
+        await prisma.dislike.delete({
+            where: { userId_videoId: { userId, videoId } },
+        });
+    } else {
+        if (existingLike) {
+            await prisma.like.delete({
+                where: { userId_videoId: { userId, videoId } },
+            });
+        }
+        await prisma.dislike.create({
+            data: { userId, videoId },
+        });
+    }
+
+    revalidatePath(`/video/${videoId}`);
+}
+
+/***************************/
+
+export const incrementVideoView = async (videoId: string) => {
+    const parsed = videoIdSchema.safeParse(videoId);
+
+    if (!parsed.success) {
+        console.error("Invalid videoId:", parsed.error.format());
+        throw new Error("Invalid video ID");
+    }
+
+    try {
+        const updatedVideo = await prisma.video.update({
+            where: {
+                id: parsed.data,
+            },
+            data: {
+                videoViews: {
+                    increment: 1,
+                },
+            },
+        });
+
+        revalidatePath("/videos"); // Or more specific: `/videos/${videoId}`
+        return updatedVideo;
+    } catch (error) {
+        console.error("Error incrementing video views:", error);
+        throw new Error("Failed to increment video views");
+    }
+};
+
+export const updateWatchHistory = async (
+    videoId: string,
+    watchedDuration: number,
+    progressPercentage: number,
+    completed: boolean
+) => {
+
+    const currentUser = await getUser();
+    if (!currentUser) {
+        throw new Error("Unauthorized");
+    }
+
+
+    await prisma.watchHistory.upsert({
+        where: {
+            userId_videoId: {
+                userId: currentUser.id, // handle auth context
+                videoId,
+            },
+        },
+        update: {
+            watchedDuration,
+            progressPercentage,
+            completed,
+        },
+        create: {
+            userId: currentUser.id,
+            videoId,
+            watchedDuration,
+            progressPercentage,
+            completed,
+        },
+    });
+};
+
+
+
+
+export async function getSubscriptionStatus(videoId: string) {
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+
+    const userId = user.id;
+
+    const video = await prisma.video.findUnique({
+        where: { id: videoId },
+        select: { channelId: true },
+    });
+
+    if (!video) {
+        throw new Error("Video not found");
+    }
+
+    const subscription = await prisma.subscription.findUnique({
+        where: {
+            userId_channelId: {
+                userId: userId,
+                channelId: video.channelId,
+            },
+        },
+    });
+
+    return { isSubscribed: !!subscription };
+}
+
+// Toggle subscription for the viewer and creator
+export async function toggleSubscription(channelId: string) {
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+    const userId = user.id;
+
+    const existingSubscription = await prisma.subscription.findUnique({
+        where: {
+            userId_channelId: {
+                userId: userId,
+                channelId,
+            },
+        },
+    });
+
+    if (existingSubscription) {
+        // If already subscribed, unsubscribe
+        await prisma.subscription.delete({
+            where: {
+                userId_channelId: {
+                    userId: userId,
+                    channelId,
+                },
+            },
+        });
+    } else {
+        // If not subscribed, subscribe
+        await prisma.subscription.create({
+            data: {
+                userId: userId,
+                channelId,
+            },
+        });
+    }
+
+    // Invalidate cache related to subscriptions
+    revalidateTag("subscription-status");
+}
+
+export async function updateNotificationLevel(
+    channelId: string,
+    level: "ALL" | "PERSONALIZED" | "NONE"
+): Promise<void> {
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+
+    try {
+        await prisma.subscription.update({
+            where: {
+                userId_channelId: {
+                    userId: user.id,
+                    channelId,
+                },
+            },
+            data: {
+                notifyLevel: level,
+            },
+        });
+
+        // Optional: refresh cache for the current channel or user page
+        revalidateTag("subscription-status");
+    } catch (error) {
+        console.error("Failed to update notification level:", error);
+        throw new Error("Unable to update notification preference.");
+    }
+}
+
+
+
+export async function createNotificationsForNewVideo(videoId: string, channelId: string, message: string) {
+    try {
+        // Get all subscriptions to the channel with notifyLevel ALL
+        const subscriptions = await prisma.subscription.findMany({
+            where: {
+                channelId,
+                notifyLevel: NotifyLevel.ALL,
+            },
+        });
+
+        if (!subscriptions.length) return;
+
+        const notifications = subscriptions.map((sub) => ({
+            userId: sub.userId,
+            type: NotificationType.NEW_VIDEO,
+            message,
+            videoId,
+            channelId,
+        }));
+
+        // Bulk create notifications
+        await prisma.notification.createMany({
+            data: notifications,
+            skipDuplicates: true,
+        });
+    } catch (error) {
+        console.error("Failed to create video notifications", error);
+    }
 }

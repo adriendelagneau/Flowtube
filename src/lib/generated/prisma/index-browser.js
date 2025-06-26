@@ -226,6 +226,63 @@ exports.Prisma.DislikeScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.WatchHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  videoId: 'videoId',
+  watchedAt: 'watchedAt',
+  watchedDuration: 'watchedDuration',
+  progressPercentage: 'progressPercentage',
+  completed: 'completed',
+  lastWatchedAt: 'lastWatchedAt'
+};
+
+exports.Prisma.CommentScalarFieldEnum = {
+  id: 'id',
+  parentId: 'parentId',
+  userId: 'userId',
+  videoId: 'videoId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommentLikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  commentId: 'commentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommentDislikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  commentId: 'commentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  message: 'message',
+  videoId: 'videoId',
+  channelId: 'channelId',
+  read: 'read',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  channelId: 'channelId',
+  notify: 'notify',
+  notifyLevel: 'notifyLevel',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -245,6 +302,21 @@ exports.VideoVisibility = exports.$Enums.VideoVisibility = {
   public: 'public'
 };
 
+exports.NotificationType = exports.$Enums.NotificationType = {
+  NEW_VIDEO: 'NEW_VIDEO',
+  LIVE_START: 'LIVE_START',
+  COMMENT: 'COMMENT',
+  REPLY: 'REPLY',
+  SUBSCRIBER: 'SUBSCRIBER',
+  MENTION: 'MENTION'
+};
+
+exports.NotifyLevel = exports.$Enums.NotifyLevel = {
+  ALL: 'ALL',
+  PERSONALIZED: 'PERSONALIZED',
+  NONE: 'NONE'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -254,7 +326,13 @@ exports.Prisma.ModelName = {
   Category: 'Category',
   Video: 'Video',
   Like: 'Like',
-  Dislike: 'Dislike'
+  Dislike: 'Dislike',
+  WatchHistory: 'WatchHistory',
+  Comment: 'Comment',
+  CommentLike: 'CommentLike',
+  CommentDislike: 'CommentDislike',
+  Notification: 'Notification',
+  Subscription: 'Subscription'
 };
 
 /**

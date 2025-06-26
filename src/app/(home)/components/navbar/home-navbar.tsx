@@ -1,12 +1,11 @@
-import { BellRingIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 // import { AuthButton } from "./auth-button";
 import { AuthButton } from "./auth-button";
+import { NotificationButton } from "./notification-button";
 import { SearchInput } from "./search-input";
 import { SearchInputSm } from "./search-input-sm";
 import { StudioButton } from "./studio-button";
@@ -45,30 +44,20 @@ export const HomeNavbar = async () => {
           <ThemeToggleButton />
 
           {/** notification */}
-          {/* <NotificationButton /> */}
-          <Button
+          <NotificationButton />
+          {/* <Button
             size={"icon"}
             variant={"ghost"}
             className="relative cursor-pointer"
           >
             <BellRingIcon />
             <span className="dark:bg-500 absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-red-700"></span>
-          </Button>
+          </Button> */}
 
           {/** auth button */}
           <AuthButton />
-
-          {/* <Suspense fallback={<AuthButtonSkeleton />}>
-              <AuthButton />
-            </Suspense> */}
         </div>
       </div>
     </div>
   );
 };
-
-// const AuthButtonSkeleton = () => (
-//   <div>
-//     <Skeleton className=" mx-2 h-7 w-7 rounded-full" />
-//   </div>
-// );

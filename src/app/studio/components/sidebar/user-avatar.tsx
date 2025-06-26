@@ -4,7 +4,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 interface UserAvatarProps {
   imageUrl: string;
-
+name?: string;
   className?: string;
   onClick?: () => void;
 }
