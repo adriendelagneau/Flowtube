@@ -1,11 +1,12 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BellRingIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
-
+import { pusherClient } from "@/lib/pusher-client";
 const fetchUnreadNotificationStatus = async (): Promise<{
   hasUnread: boolean;
 }> => {
@@ -16,9 +17,9 @@ const fetchUnreadNotificationStatus = async (): Promise<{
 
 export const NotificationButton = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["unreadNotifications"],
     queryFn: fetchUnreadNotificationStatus,
     refetchOnWindowFocus: false,
@@ -26,6 +27,21 @@ export const NotificationButton = () => {
   });
 
   const hasUnread = data?.hasUnread ?? false;
+
+  useEffect(() => {
+    const userId = "<CURRENT_USER_ID>"; // Replace with actual user ID from context/session
+
+    const channel = pusherClient.subscribe(`user-${userId}`);
+
+    channel.bind("new-notification", () => {
+      // Invalidate to refetch unread state
+      queryClient.invalidateQueries({ queryKey: ["unreadNotifications"] });
+    });
+
+    return () => {
+      pusherClient.unsubscribe(`user-${userId}`);
+    };
+  }, [queryClient]);
 
   return (
     <Button

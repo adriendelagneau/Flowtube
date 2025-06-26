@@ -11,6 +11,7 @@ import { getUser } from "@/lib/auth/auth-session";
 import { NotificationType, NotifyLevel, Prisma, PrismaClient, Video } from "@/lib/generated/prisma";
 import { inputSchema, videoIdSchema } from "@/lib/zod";
 import { VideoWithUser } from "@/types";
+import { pusherServer } from "@/lib/pusher";
 
 
 const mux = new Mux({
@@ -714,32 +715,41 @@ export async function updateNotificationLevel(
 
 
 
-export async function createNotificationsForNewVideo(videoId: string, channelId: string, message: string) {
-    try {
-        // Get all subscriptions to the channel with notifyLevel ALL
-        const subscriptions = await prisma.subscription.findMany({
-            where: {
-                channelId,
-                notifyLevel: NotifyLevel.ALL,
-            },
-        });
+export async function createNotificationsForNewVideo(
+  videoId: string,
+  channelId: string,
+  message: string
+) {
+  try {
+    // 1. Get all subscriptions with NotifyLevel.ALL
+    const subscriptions = await prisma.subscription.findMany({
+      where: {
+        channelId,
+        notifyLevel: NotifyLevel.ALL,
+        notify: true,
+      },
+    });
 
-        if (!subscriptions.length) return;
+    if (!subscriptions.length) return;
 
-        const notifications = subscriptions.map((sub) => ({
-            userId: sub.userId,
-            type: NotificationType.NEW_VIDEO,
-            message,
-            videoId,
-            channelId,
-        }));
+    // 2. Loop through subscriptions, create and trigger real-time
+    for (const sub of subscriptions) {
+      const notification = await prisma.notification.create({
+        data: {
+          userId: sub.userId,
+          type: NotificationType.NEW_VIDEO,
+          message,
+          videoId,
+          channelId,
+        },
+      });
 
-        // Bulk create notifications
-        await prisma.notification.createMany({
-            data: notifications,
-            skipDuplicates: true,
-        });
-    } catch (error) {
-        console.error("Failed to create video notifications", error);
+      // 3. Trigger real-time notification to the user
+      await pusherServer.trigger(`user-${sub.userId}`, "new-notification", {
+        notification,
+      });
     }
+  } catch (error) {
+    console.error("Failed to create and send video notifications", error);
+  }
 }
